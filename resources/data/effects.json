@@ -1,0 +1,12 @@
+[
+  {
+    "id": "chill",
+    "effects": [
+      {
+        "type": "MOVEMENT_SPEED",
+        "value": 0.8,
+        "modifier": "MULTIPLICATION"
+      }
+    ]
+  }
+]

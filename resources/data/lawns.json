@@ -1,0 +1,26 @@
+[
+  {
+    "id": "modern",
+    "asset": "textures/lawns/modern.png",
+    "sunDropper": "normal",
+    "rows": 5,
+    "columns": 9,
+    "tileSizeX": 64,
+    "tileSizeY": 64,
+    "lawnUpperLeftCornerX": 192,
+    "lawnUpperLeftCornerY": 158,
+    "plantSize": 1.0,
+    "zombieSize": 1.0,
+    "tileKeys": {
+      "a": "ground",
+      "b": "ice"
+    },
+    "tileSet": [
+      "aaaaaaaba",
+      "aaaaaaaaa",
+      "aaaaaaaaa",
+      "aaaaaaaaa",
+      "aaaaaaaaa"
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "pea",
+    "asset": "projectiles/pea.png",
+    "damage": 20,
+    "traits": []
+  },
+  {
+    "id": "snow_pea",
+    "asset": "projectiles/pea.png",
+    "damage": 20,
+    "traits": [
+      {
+        "id": "EffectApplier",
+        "effect": "chill",
+        "effectTime": 5.0
+      }
+    ]
+  }
+]

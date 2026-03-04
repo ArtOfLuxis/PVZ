@@ -1,0 +1,18 @@
+[
+  {
+    "id": "ground",
+    "asset": null,
+    "traits": []
+  },
+  {
+    "id": "ice",
+    "asset": "tiles/ice.png",
+    "traits": [
+      {
+        "id": "EffectApplierTile",
+        "effect": "chill",
+        "effectTime": 2.5
+      }
+    ]
+  }
+]
