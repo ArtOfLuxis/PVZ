@@ -1,8 +1,8 @@
 [
   {
     "id": "normal",
-    "initialDelay": 5.0,
-    "delay": 8.0,
-    "sunValue": 50
+    "initialDelay": 6.0,
+    "delay": 13.0,
+    "sunValue": 25
   }
 ]

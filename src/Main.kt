@@ -9,23 +9,33 @@ import plant.traits.*
 import registries.*
 import scenes.InGameScene
 
-suspend fun main() = Korge(windowSize = Size(1020, 540), backgroundColor = Colors["#000000"]) {
-    ProjectileRegistry.load()
-    PlantRegistry.load()
-    SunDropperRegistry.load()
-    TileRegistry.load()
-    LawnRegistry.load()
+suspend fun main() {
+    GlobalRegistry.load()
 
-	val sceneContainer = sceneContainer()
+    Korge(
+        windowSize = Size(1020, 540),
+        backgroundColor = Colors["#000000"],
+        icon = GlobalRegistry.iconAsset
+    ) {
+        ProjectileRegistry.load()
+        PlantRegistry.load()
+        SunDropperRegistry.load()
+        TileRegistry.load()
+        LawnRegistry.load()
 
-	//sceneContainer.changeTo { InGameScene(lawnType) }
+        val sceneContainer = sceneContainer()
+
+        //sceneContainer.changeTo { InGameScene(lawnType) }
 
 
-    println("""
+        println(
+            """
         Projectiles: ${ProjectileRegistry.projectiles}
         Plants: ${PlantRegistry.plants}
         Sun Droppers: ${SunDropperRegistry.sunDroppers}
         Tiles: ${TileRegistry.tiles}
         Lawns: ${LawnRegistry.lawns}
-    """.trimIndent())
+    """.trimIndent()
+        )
+    }
 }

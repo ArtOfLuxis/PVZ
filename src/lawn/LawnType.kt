@@ -6,6 +6,7 @@ import tile.*
 data class LawnType(
     val id: String,
     val asset: VfsFile,
+    val sunSprite: VfsFile,
     val rows: Int,
     val columns: Int,
     val tileSize: Pair<Int, Int>,

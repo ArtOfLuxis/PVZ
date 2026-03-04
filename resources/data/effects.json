@@ -1,12 +1,20 @@
 [
   {
     "id": "chill",
+    "visuals": [
+      {
+        "type": "tint",
+        "color": "#70b7cf",
+        "alpha": 80
+      }
+    ],
     "effects": [
       {
-        "type": "MOVEMENT_SPEED",
-        "value": 0.8,
+        "type": "SPEED",
+        "value": 0.6,
         "modifier": "MULTIPLICATION"
       }
     ]
   }
 ]
+

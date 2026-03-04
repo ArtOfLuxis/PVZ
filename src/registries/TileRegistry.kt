@@ -15,7 +15,7 @@ object TileRegistry {
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
             val assetPath = value.jsonObject["asset"]!!.jsonPrimitive.contentOrNull
-            val asset = if (assetPath == null) null else resourcesVfs[assetPath]
+            val asset = if (assetPath == null) null else resourcesVfs["textures/$assetPath"]
 
             val traits = hashSetOf<Trait>()
             value.jsonObject["traits"]!!.jsonArray.forEach { obj ->

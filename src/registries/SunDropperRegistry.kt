@@ -15,9 +15,9 @@ object SunDropperRegistry {
 
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
-            val initialDelay = value.jsonObject["initialDelay"]!!.jsonPrimitive.content.toDouble()
-            val delay = value.jsonObject["delay"]!!.jsonPrimitive.content.toDouble()
-            val sunValue = value.jsonObject["sunValue"]!!.jsonPrimitive.content.toInt()
+            val initialDelay = value.jsonObject["initialDelay"]!!.jsonPrimitive.double
+            val delay = value.jsonObject["delay"]!!.jsonPrimitive.double
+            val sunValue = value.jsonObject["sunValue"]!!.jsonPrimitive.int
 
             sunDroppers[id] = SunDropper(
                 id, initialDelay, delay, sunValue

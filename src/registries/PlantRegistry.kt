@@ -15,11 +15,11 @@ object PlantRegistry {
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
             val name = value.jsonObject["name"]!!.jsonPrimitive.content
-            val sunCost = value.jsonObject["sunCost"]!!.jsonPrimitive.content.toInt()
-            val refreshTime = value.jsonObject["refreshTime"]!!.jsonPrimitive.content.toDouble()
-            val toughness = value.jsonObject["toughness"]!!.jsonPrimitive.content.toInt()
-            val spriteAsset = value.jsonObject["sprite"]!!.jsonPrimitive.content
-            val packetAsset = value.jsonObject["spritePacket"]!!.jsonPrimitive.content
+            val sunCost = value.jsonObject["sunCost"]!!.jsonPrimitive.int
+            val refreshTime = value.jsonObject["refreshTime"]!!.jsonPrimitive.double
+            val toughness = value.jsonObject["toughness"]!!.jsonPrimitive.int
+            val spriteAsset = "textures/" + value.jsonObject["sprite"]!!.jsonPrimitive.content
+            val packetAsset = "textures/" + value.jsonObject["spritePacket"]!!.jsonPrimitive.content
 
             val traits = hashSetOf<Trait>()
             value.jsonObject["traits"]!!.jsonArray.forEach { obj ->

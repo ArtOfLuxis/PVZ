@@ -14,15 +14,16 @@ object LawnRegistry {
 
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
-            val asset = value.jsonObject["asset"]!!.jsonPrimitive.content
-            val rows = value.jsonObject["rows"]!!.jsonPrimitive.content.toInt()
-            val columns = value.jsonObject["columns"]!!.jsonPrimitive.content.toInt()
-            val tileSizeX = value.jsonObject["tileSizeX"]!!.jsonPrimitive.content.toInt()
-            val tileSizeY = value.jsonObject["tileSizeY"]!!.jsonPrimitive.content.toInt()
-            val lawnUpperLeftCornerX = value.jsonObject["lawnUpperLeftCornerX"]!!.jsonPrimitive.content.toInt()
-            val lawnUpperLeftCornerY = value.jsonObject["lawnUpperLeftCornerY"]!!.jsonPrimitive.content.toInt()
-            val plantSize = value.jsonObject["plantSize"]!!.jsonPrimitive.content.toFloat()
-            val zombieSize = value.jsonObject["zombieSize"]!!.jsonPrimitive.content.toFloat()
+            val asset = "textures/" + value.jsonObject["asset"]!!.jsonPrimitive.content
+            val sunSprite = SpriteRegistry.get(value.jsonObject["sunSprite"]!!.jsonPrimitive.content)
+            val rows = value.jsonObject["rows"]!!.jsonPrimitive.int
+            val columns = value.jsonObject["columns"]!!.jsonPrimitive.int
+            val tileSizeX = value.jsonObject["tileSizeX"]!!.jsonPrimitive.int
+            val tileSizeY = value.jsonObject["tileSizeY"]!!.jsonPrimitive.int
+            val lawnUpperLeftCornerX = value.jsonObject["lawnUpperLeftCornerX"]!!.jsonPrimitive.int
+            val lawnUpperLeftCornerY = value.jsonObject["lawnUpperLeftCornerY"]!!.jsonPrimitive.int
+            val plantSize = value.jsonObject["plantSize"]!!.jsonPrimitive.float
+            val zombieSize = value.jsonObject["zombieSize"]!!.jsonPrimitive.float
 
 
             val tileKeys = value.jsonObject["tileKeys"]!!.jsonObject
@@ -33,7 +34,7 @@ object LawnRegistry {
                 }}
 
             lawns[id] = LawnType(
-                id, resourcesVfs[asset], rows, columns,
+                id, resourcesVfs[asset], sunSprite, rows, columns,
                 tileSizeX to tileSizeY,
                 lawnUpperLeftCornerX to lawnUpperLeftCornerY,
                 plantSize, zombieSize, tileSet
