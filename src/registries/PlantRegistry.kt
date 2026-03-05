@@ -18,8 +18,8 @@ object PlantRegistry {
             val sunCost = value.jsonObject["sunCost"]!!.jsonPrimitive.int
             val refreshTime = value.jsonObject["refreshTime"]!!.jsonPrimitive.double
             val toughness = value.jsonObject["toughness"]!!.jsonPrimitive.int
-            val spriteAsset = "textures/" + value.jsonObject["sprite"]!!.jsonPrimitive.content
-            val packetAsset = "textures/" + value.jsonObject["spritePacket"]!!.jsonPrimitive.content
+            val spriteAsset = value.jsonObject["sprite"]!!.jsonPrimitive.content
+            val packetAsset = value.jsonObject["spritePacket"]!!.jsonPrimitive.content
 
             val traits = hashSetOf<Trait>()
             value.jsonObject["traits"]!!.jsonArray.forEach { obj ->
@@ -40,5 +40,5 @@ object PlantRegistry {
     }
 
     fun get(id: String): PlantType =
-        plants[id] ?: error("Unknown plant type: $id")
+        plants[id] ?: error("Unknown plant id: $id")
 }

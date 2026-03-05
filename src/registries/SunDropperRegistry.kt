@@ -26,5 +26,5 @@ object SunDropperRegistry {
     }
 
     fun get(id: String): SunDropper =
-        sunDroppers[id] ?: error("Unknown sun dropper type: $id")
+        sunDroppers[id] ?: error("Unknown sun dropper id: $id")
 }

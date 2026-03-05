@@ -15,7 +15,7 @@ object ProjectileRegistry {
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
             val damage = value.jsonObject["damage"]!!.jsonPrimitive.int
-            val asset = "textures/" + value.jsonObject["asset"]!!.jsonPrimitive.content
+            val asset = value.jsonObject["asset"]!!.jsonPrimitive.content
 
             val traits = hashSetOf<Trait>()
             value.jsonObject["traits"]!!.jsonArray.forEach { obj ->
@@ -32,5 +32,5 @@ object ProjectileRegistry {
     }
 
     fun get(id: String): ProjectileType =
-        projectiles[id] ?: error("Unknown projectile type: $id")
+        projectiles[id] ?: error("Unknown projectile id: $id")
 }

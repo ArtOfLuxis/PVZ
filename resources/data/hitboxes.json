@@ -1,0 +1,18 @@
+[
+  {
+    "id": "commonHitHitbox",
+    "width": 0.75,
+    "height": 0.75,
+    "xOffset": 0.0,
+    "yOffset": 0.0,
+    "center": "CENTER"
+  },
+  {
+    "id": "straightOneLaneDetectionHitbox",
+    "width": 999.0,
+    "height": 0.4,
+    "xOffset": 0.0,
+    "yOffset": 0.6,
+    "center": "CENTER_LEFT"
+  }
+]

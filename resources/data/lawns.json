@@ -6,14 +6,13 @@
     "sunSprite": "sun",
     "rows": 5,
     "columns": 9,
-    "tileSizeX": 60,
-    "tileSizeY": 64,
-    "lawnUpperLeftCornerX": 192,
-    "lawnUpperLeftCornerY": 158,
-    "plantSize": 1.0,
+    "tileSize": [60, 64],
+    "lawnUpperLeftCorner": [192, 158],
+    "plantSize": 0.9,
     "zombieSize": 1.0,
+    "defaultTile": "ground",
     "tileKeys": {
-      "a": "ground",
+      "a": null,
       "b": "ice"
     },
     "tileSet": [

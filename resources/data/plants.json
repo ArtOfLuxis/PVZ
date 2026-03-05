@@ -5,14 +5,16 @@
     "sunCost": 100,
     "refreshTime": 5.0,
     "toughness": 300,
-    "sprite": "plants/sprites/peashooter.png",
-    "spritePacket": "plants/packets/peashooter.png",
+    "damageHitbox": "commonHitHitbox",
+    "sprite": "textures/plants/sprites/peashooter.png",
+    "spritePacket": "textures/plants/packets/peashooter.png",
     "traits": [
       {
         "id": "StraightShooter",
         "projectile": "pea",
         "interval": 1.35,
         "additionalInterval": 0.15,
+        "detectionHitbox": "straightOneLaneDetectionHitbox",
         "projectileAmount": 1,
         "projectileInterval": 0.1,
         "attackRows": [-1, 0, 1],

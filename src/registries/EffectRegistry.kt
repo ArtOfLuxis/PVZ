@@ -44,5 +44,5 @@ object EffectRegistry {
     }
 
     fun get(id: String): EffectType =
-        effectTypes[id] ?: error("Unknown effect type: $id")
+        effectTypes[id] ?: error("Unknown effect id: $id")
 }

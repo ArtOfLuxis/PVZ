@@ -32,5 +32,5 @@ object TileRegistry {
     }
 
     fun get(id: String): TileType =
-        tiles[id] ?: error("Unknown tile type: $id")
+        tiles[id] ?: error("Unknown tile id: $id")
 }

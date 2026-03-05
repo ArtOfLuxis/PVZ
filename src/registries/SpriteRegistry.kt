@@ -16,12 +16,12 @@ object SpriteRegistry {
 
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
-            val asset = "textures/" + value.jsonObject["asset"]!!.jsonPrimitive.content
+            val asset = value.jsonObject["asset"]!!.jsonPrimitive.content
 
             sprites[id] = resourcesVfs[asset]
         }
     }
 
     fun get(id: String): VfsFile =
-        sprites[id] ?: error("Unknown sun dropper type: $id")
+        sprites[id] ?: error("Unknown sprite id: $id")
 }

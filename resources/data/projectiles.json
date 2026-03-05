@@ -1,13 +1,13 @@
 [
   {
     "id": "pea",
-    "asset": "projectiles/pea.png",
+    "asset": "textures/projectiles/pea.png",
     "damage": 20,
     "traits": []
   },
   {
     "id": "snow_pea",
-    "asset": "projectiles/pea.png",
+    "asset": "textures/projectiles/pea.png",
     "damage": 20,
     "traits": [
       {

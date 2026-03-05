@@ -11,6 +11,6 @@ object GlobalRegistry {
         val text = resourcesVfs["data/global.json"].readString()
         val json = Json.parseToJsonElement(text).jsonObject
 
-        iconAsset = "textures/" + json["iconAsset"]!!.jsonPrimitive.content
+        iconAsset = json["iconAsset"]!!.jsonPrimitive.content
     }
 }

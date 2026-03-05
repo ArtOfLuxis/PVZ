@@ -7,7 +7,7 @@ import kotlinx.serialization.json.*
 import lawn.*
 import plant.traits.*
 import registries.*
-import scenes.InGameScene
+import game.scenes.InGameScene
 
 suspend fun main() {
     GlobalRegistry.load()
@@ -17,6 +17,10 @@ suspend fun main() {
         backgroundColor = Colors["#000000"],
         icon = GlobalRegistry.iconAsset
     ) {
+        SpriteRegistry.load()
+        HitboxRegistry.load()
+        TeamRegistry.load()
+        EffectRegistry.load()
         ProjectileRegistry.load()
         PlantRegistry.load()
         SunDropperRegistry.load()
@@ -25,17 +29,20 @@ suspend fun main() {
 
         val sceneContainer = sceneContainer()
 
-        //sceneContainer.changeTo { InGameScene(lawnType) }
-
+        sceneContainer.changeTo { InGameScene(LawnRegistry.get("modern")) }
 
         println(
             """
-        Projectiles: ${ProjectileRegistry.projectiles}
-        Plants: ${PlantRegistry.plants}
-        Sun Droppers: ${SunDropperRegistry.sunDroppers}
-        Tiles: ${TileRegistry.tiles}
-        Lawns: ${LawnRegistry.lawns}
-    """.trimIndent()
+                Sprites: ${SpriteRegistry.sprites}
+                Effects: ${EffectRegistry.effectTypes}
+                Hitboxes: ${HitboxRegistry.hitboxes}
+                Teams: ${TeamRegistry.teams}
+                Projectiles: ${ProjectileRegistry.projectiles}
+                Plants: ${PlantRegistry.plants}
+                Sun Droppers: ${SunDropperRegistry.sunDroppers}
+                Tiles: ${TileRegistry.tiles}
+                Lawns: ${LawnRegistry.lawns}
+            """.trimIndent()
         )
     }
 }
