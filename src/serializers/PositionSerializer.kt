@@ -1,13 +1,9 @@
 package serializers
 
 import Position
-import game.hitbox.*
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.*
-import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*
-import projectile.*
-import registries.*
 
 object PositionSerializer : KSerializer<Position> {
     override val descriptor =

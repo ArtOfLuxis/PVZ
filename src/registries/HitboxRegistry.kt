@@ -1,12 +1,8 @@
 package registries
 
 import game.hitbox.*
-import korlibs.io.file.*
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
-import lawn.*
-import plant.*
-import trait.*
 
 data object HitboxRegistry : Registry {
     val hitboxes = HashMap<String, Hitbox>()

@@ -1,12 +1,8 @@
 package registries
 
-import korlibs.io.file.*
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
-import lawn.*
 import loadBitmap
-import plant.*
-import trait.*
 
 data object SpriteRegistry : Registry {
     val sprites = HashMap<String, String>()
