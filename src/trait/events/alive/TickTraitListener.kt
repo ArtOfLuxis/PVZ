@@ -1,6 +1,4 @@
-package trait.events
-
-import game.objects.logic.*
+package trait.events.alive
 
 interface TickTraitListener {
     fun tick(deltaTime: Double)

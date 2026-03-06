@@ -1,4 +1,5 @@
 {
   "iconAsset": "textures/icon.png",
-  "showDebugHitboxes": true
+  "showDebugHitboxes": true,
+  "debugHitboxUpdateInterval": 0.05
 }

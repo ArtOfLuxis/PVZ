@@ -1,14 +1,16 @@
 package game.objects.logic
 
+import HighlightFilter
 import Position
 import game.hitbox.*
 import game.objects.LawnObject
 import game.objects.ObjectTeam
 import game.objects.TickableLawnObject
 import game.scenes.*
+import game.types.*
 import korlibs.korge.view.*
-import projectile.*
 import trait.*
+import trait.events.alive.*
 
 class LawnProjectile(
     override var pos: Position,
@@ -21,5 +23,12 @@ class LawnProjectile(
     val type: ProjectileType,
     val parentShooter: LawnObject
 ): TickableLawnObject {
+    override val highlightFilter = HighlightFilter(mutableListOf())
     override fun asset() = type.asset
+
+    fun projectileHitObject(obj: LawnObject) {
+        traits.forEach {
+            if (it is ProjectileHitObjectTraitListener) it.projectileHitObject(obj)
+        }
+    }
 }

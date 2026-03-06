@@ -23,22 +23,28 @@ data object EffectRegistry : Registry {
                 effectVisuals.add(effectVisual)
             }
 
-            val effect1s = hashSetOf<EffectType>()
+            val effects = hashSetOf<EffectType>()
             value.jsonObject["effects"]!!.jsonArray.forEach { obj ->
                 val effectType = EffectModifierType.valueOf(
                     obj.jsonObject["type"]!!.jsonPrimitive.content.uppercase()
                 )
                 val effectValue = obj.jsonObject["value"]!!.jsonPrimitive.double
-                val effectModifier = ModifierType.valueOf(
-                    obj.jsonObject["modifier"]!!.jsonPrimitive.content
+                val effectOperation = OperationType.valueOf(
+                    obj.jsonObject["operation"]!!.jsonPrimitive.content
                 )
-                val effect1 = EffectType(effectType, effectValue, effectModifier)
+                val effectOperationOrder = OperationOrder.valueOf(
+                    obj.jsonObject["order"]!!.jsonPrimitive.content
+                )
+                val effect = EffectType(
+                    effectType, effectValue, effectOperation,
+                    effectOperationOrder
+                )
 
-                effect1s.add(effect1)
+                effects.add(effect)
             }
 
             effectTypes[id] = Effect(
-                id, effectVisuals, effect1s
+                id, effectVisuals, effects
             )
         }
     }

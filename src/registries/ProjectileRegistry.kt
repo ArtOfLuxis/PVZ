@@ -1,9 +1,9 @@
 package registries
 
+import game.types.*
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
 import loadBitmap
-import projectile.*
 import trait.*
 
 data object ProjectileRegistry : Registry {

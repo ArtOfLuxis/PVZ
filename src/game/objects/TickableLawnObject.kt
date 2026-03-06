@@ -1,7 +1,7 @@
 package game.objects
 
 import trait.*
-import trait.events.*
+import trait.events.alive.*
 
 interface TickableLawnObject : LawnObject {
     val traits: HashSet<TraitInstance>

@@ -1,9 +1,7 @@
 package game.hitbox
 
 import Position
-import korlibs.image.color.*
-import korlibs.korge.view.*
-import lawn.LawnType
+import game.types.LawnType
 import korlibs.math.geom.Rectangle
 
 class Hitbox(

@@ -10,7 +10,7 @@ interface EffectVisual {
             return when (type.lowercase()) {
                 "tint" -> EffectVisualTint(
                     Colors[json["color"]!!.jsonPrimitive.content]
-                        .withAd(json["alpha"]!!.jsonPrimitive.double)
+                        .withA(json["alpha"]!!.jsonPrimitive.int)
                 )
                 else -> error("Unknown effect visual '$type': $json")
             }

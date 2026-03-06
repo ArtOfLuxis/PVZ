@@ -1,8 +1,6 @@
-package lawn
+package game.types
 
 import Position
-import korlibs.io.file.VfsFile
-import tile.*
 
 class LawnType(
     val id: String,

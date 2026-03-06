@@ -10,6 +10,8 @@ data object GlobalRegistry : Registry {
         private set
     var showDebugHitboxes: Boolean? = null
         private set
+    var debugHitboxUpdateInterval: Double? = null
+        private set
 
     override suspend fun load() {
         val text = resourcesVfs["data/global.json"].readString()
@@ -18,5 +20,6 @@ data object GlobalRegistry : Registry {
         iconAsset = json["iconAsset"]!!.jsonPrimitive.content
         loadBitmap(iconAsset!!)
         showDebugHitboxes = json["showDebugHitboxes"]!!.jsonPrimitive.boolean
+        debugHitboxUpdateInterval = json["debugHitboxUpdateInterval"]!!.jsonPrimitive.double
     }
 }

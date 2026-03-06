@@ -1,12 +1,13 @@
-package zombie
+package game.types
 
-import korlibs.io.file.*
+import game.hitbox.*
 import trait.*
 
 data class ZombieType(
     val id: String,
     val name: String,
     val toughness: Double,
+    val hitHitbox: Hitbox,
     val asset: String,
     val traits: HashSet<Trait>
 )

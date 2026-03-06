@@ -1,5 +1,6 @@
 package game.scenes
 
+import handleException
 import korlibs.image.color.*
 import korlibs.korge.scene.*
 import korlibs.korge.view.*
@@ -51,11 +52,7 @@ class LoadingScene(
         } catch (e: Exception) {
             this.removeChildren()
 
-            this.stage!!.gameWindow.setSize(1200, 600)
-            this.stage!!.gameWindow.title = "Encountered Exception"
-
-            val sceneContainer = sceneContainer()
-            sceneContainer.changeTo { ExceptionScene(e) }
+            handleException(e, this.stage!!)
         }
     }
 }

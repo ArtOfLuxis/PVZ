@@ -3,28 +3,14 @@ import korlibs.image.color.*
 import korlibs.korge.*
 import korlibs.korge.scene.*
 import korlibs.math.geom.*
-import plant.traits.*
+import mod.*
 import registries.*
-import projectile.traits.*
-import tile.traits.*
-import trait.*
-import zombie.traits.*
 
 suspend fun main() {
+    println("Starting...")
     GlobalRegistry.load()
-    // plant traits
-    Trait.register("StraightShooter", ::StraightShooterTrait)
 
-    // projectile traits
-    Trait.register("CommonProjectileLogic", ::ProjectileLogicTrait)
-    Trait.register("EffectApplier", ::EffectApplierTrait)
-    Trait.register("FlammableProjectile", ::FlammableProjectileTrait)
-
-    // zombie traits
-    Trait.register("CommonZombieLogic", ::CommonZombieLogicTrait)
-
-    // tile traits
-    Trait.register("EffectApplierTile", ::EffectApplierTileTrait)
+    loadAndRunMod("E:\\IDE\\projects\\PVZBaseGameMod\\build\\libs\\PVZBaseGameMod-1.0.jar")
 
     Korge(
         windowSize = Size(1020, 540),
@@ -55,11 +41,7 @@ suspend fun main() {
                 )
             }}
         } catch (e: Exception) {
-            this.gameWindow.setSize(1200, 600)
-            this.gameWindow.title = "Encountered Exception"
-
-            val sceneContainer = sceneContainer()
-            sceneContainer.changeTo { ExceptionScene(e) }
+            handleException(e, this)
         }
     }
 }

@@ -1,10 +1,9 @@
 package registries
 
+import game.types.*
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
-import lawn.*
 import loadBitmap
-import tile.*
 
 data object LawnRegistry : Registry {
     val lawns = HashMap<String, LawnType>()

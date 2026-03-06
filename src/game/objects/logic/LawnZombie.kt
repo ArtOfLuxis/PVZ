@@ -1,13 +1,15 @@
 package game.objects.logic
 
+import HighlightFilter
 import Position
+import Timer
 import effects.*
 import game.hitbox.*
 import game.objects.*
 import game.scenes.*
+import game.types.*
 import korlibs.korge.view.*
 import trait.*
-import zombie.*
 
 class LawnZombie(
     override var pos: Position,
@@ -18,9 +20,10 @@ class LawnZombie(
     override var image: Image?,
     override val traits: HashSet<TraitInstance>,
     override val toughness: Double,
+    override val effects: HashMap<Effect, Timer>,
     val type: ZombieType,
-    val effects: List<Effect>
 ): AliveLawnObject {
+    override val highlightFilter = HighlightFilter(mutableListOf())
 
     override fun asset() = type.asset
 }

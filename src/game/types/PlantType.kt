@@ -1,6 +1,6 @@
-package plant
+package game.types
 
-import korlibs.io.file.*
+import game.hitbox.*
 import trait.*
 
 data class PlantType(
@@ -9,6 +9,7 @@ data class PlantType(
     val sunCost: Int,
     val refreshTime: Double,
     val toughness: Double,
+    val hitHitbox: Hitbox,
     val spriteAsset: String,
     val packetAsset: String,
     val traits: HashSet<Trait>

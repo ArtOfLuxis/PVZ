@@ -6,24 +6,28 @@
     "detectionHitbox": "commonProjectileHitbox",
     "traits": [
       {
-        "id": "CommonProjectileLogic",
+        "id": "StraightProjectileLogic",
         "speed": 8.0
       },
       {
         "id": "FlammableProjectile",
-        "visuals": [
-          {
-            "type": "SWAP_ASSET",
-            "newAsset": "textures/projectiles/fire_pea.png"
-          }
-        ],
-        "effects": [
-          {
-            "type": "DAMAGE",
-            "value": 2.0,
-            "modifier": "MULTIPLICATION"
-          }
-        ]
+        "newProjectile": "fire_pea"
+      }
+    ]
+  },
+  {
+    "id": "fire_pea",
+    "asset": "textures/projectiles/fire_pea.png",
+    "damage": 40,
+    "detectionHitbox": "commonProjectileHitbox",
+    "traits": [
+      {
+        "id": "StraightProjectileLogic",
+        "speed": 8.0
+      },
+      {
+        "id": "FlammableProjectile",
+        "newProjectile": "fire_pea"
       }
     ]
   },
@@ -34,23 +38,17 @@
     "detectionHitbox": "commonProjectileHitbox",
     "traits": [
       {
-        "id": "CommonProjectileLogic",
+        "id": "StraightProjectileLogic",
         "speed": 8.0
       },
       {
-        "id": "EffectApplier",
-        "effect": "chill",
-        "effectTime": 5.0
+        "id": "FlammableProjectile",
+        "newProjectile": "pea"
       },
       {
-        "id": "FlammableProjectile",
-        "visuals": [
-          {
-            "type": "SWAP_PROJECTILE_TYPE",
-            "newProjectileType": "pea"
-          }
-        ],
-        "effects": []
+        "id": "EffectApplierProjectile",
+        "effect": "chill",
+        "effectTime": 5.0
       }
     ]
   }

@@ -1,10 +1,11 @@
 package game.objects
 
+import HighlightFilter
 import Position
 import game.hitbox.*
 import game.scenes.*
-import korlibs.korge.scene.*
 import korlibs.korge.view.*
+import korlibs.korge.view.filter.*
 
 interface LawnObject {
     var pos: Position
@@ -13,6 +14,7 @@ interface LawnObject {
     var team: ObjectTeam
     val scene: InGameScene
     var image: Image?
+    val highlightFilter: HighlightFilter
 
     fun asset(): String
     fun findIntersectingObjects(filter: (LawnObject, Hitbox) -> Boolean): List<LawnObject> {
@@ -26,5 +28,10 @@ interface LawnObject {
                 ) &&
                 filter(other, other.hitHitbox)
         }
+    }
+
+    fun setNewImage(newImage: Image) {
+        this.image = newImage
+        this.image!!.filter = highlightFilter
     }
 }

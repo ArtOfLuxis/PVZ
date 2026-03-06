@@ -1,13 +1,11 @@
 package registries
 
+import game.types.*
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
-import lawn.*
-import plant.*
-import trait.*
 
 data object SunDropperRegistry : Registry {
-    val sunDroppers = HashMap<String, SunDropper>()
+    val sunDroppers = HashMap<String, SunDropperType>()
 
     override suspend fun load() {
         val text = resourcesVfs["data/sundroppers.json"].readString()
@@ -19,12 +17,12 @@ data object SunDropperRegistry : Registry {
             val delay = value.jsonObject["delay"]!!.jsonPrimitive.double
             val sunValue = value.jsonObject["sunValue"]!!.jsonPrimitive.int
 
-            sunDroppers[id] = SunDropper(
+            sunDroppers[id] = SunDropperType(
                 id, initialDelay, delay, sunValue
             )
         }
     }
 
-    fun get(id: String): SunDropper =
+    fun get(id: String): SunDropperType =
         sunDroppers[id] ?: error("Unknown sun dropper id: $id")
 }

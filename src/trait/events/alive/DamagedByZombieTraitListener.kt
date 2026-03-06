@@ -1,4 +1,4 @@
-package trait.events
+package trait.events.alive
 
 import game.objects.logic.*
 

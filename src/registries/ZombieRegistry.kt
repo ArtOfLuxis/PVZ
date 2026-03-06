@@ -1,11 +1,10 @@
 package registries
 
+import game.types.*
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
 import loadBitmap
-import plant.*
 import trait.*
-import zombie.*
 
 data object ZombieRegistry : Registry {
     val zombies = HashMap<String, ZombieType>()
@@ -18,6 +17,7 @@ data object ZombieRegistry : Registry {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
             val name = value.jsonObject["name"]!!.jsonPrimitive.content
             val toughness = value.jsonObject["toughness"]!!.jsonPrimitive.double
+            val hitHitbox = HitboxRegistry.get(value.jsonObject["hitHitbox"]!!.jsonPrimitive.content)
             val asset = value.jsonObject["asset"]!!.jsonPrimitive.content
             loadBitmap(asset)
 
@@ -32,7 +32,7 @@ data object ZombieRegistry : Registry {
             }
 
             zombies[id] = ZombieType(
-                id, name, toughness, asset, traits
+                id, name, toughness, hitHitbox, asset, traits
             )
         }
     }

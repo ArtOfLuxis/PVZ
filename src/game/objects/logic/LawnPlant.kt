@@ -1,12 +1,14 @@
 package game.objects.logic
 
+import HighlightFilter
 import Position
+import Timer
 import effects.*
 import game.hitbox.*
 import game.objects.*
 import game.scenes.*
 import korlibs.korge.view.*
-import plant.PlantType
+import game.types.PlantType
 import trait.*
 
 class LawnPlant(
@@ -18,9 +20,10 @@ class LawnPlant(
     override var image: Image?,
     override val traits: HashSet<TraitInstance>,
     override val toughness: Double,
+    override val effects: HashMap<Effect, Timer>,
     val type: PlantType,
-    val effects: MutableList<Effect>,
 ): AliveLawnObject {
+    override val highlightFilter = HighlightFilter(mutableListOf())
 
     override fun asset() = type.spriteAsset
 }

@@ -1,6 +1,5 @@
-package tile
+package game.types
 
-import korlibs.io.file.*
 import trait.*
 
 data class TileType(

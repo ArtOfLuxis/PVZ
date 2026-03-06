@@ -5,12 +5,13 @@
     "sunCost": 100,
     "refreshTime": 5.0,
     "toughness": 300.0,
-    "damageHitbox": "commonPlantHitHitbox",
+    "hitHitbox": "commonPlantHitHitbox",
     "sprite": "textures/plants/sprites/peashooter.png",
     "spritePacket": "textures/plants/packets/peashooter.png",
     "traits": [
+      { "id": "CommonPlantLogic" },
       {
-        "id": "StraightShooter",
+        "id": "StraightShooterPlant",
         "projectile": "snow_pea",
         "projectilePositionOffset": [0.25, -0.4],
         "interval": 1.35,

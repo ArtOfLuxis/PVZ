@@ -1,6 +1,6 @@
-package lawn
+package game.types
 
-data class SunDropper(
+data class SunDropperType(
     val id: String,
     val initialDelay: Double,
     val delay: Double,

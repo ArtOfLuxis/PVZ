@@ -39,6 +39,9 @@ open class Trait(
         private val registry = HashMap<String, (JsonObject) -> Trait>()
 
         fun register(name: String, constructor: (JsonObject) -> Trait) {
+            require(name !in registry) {
+                "Trait $name is already registered"
+            }
             registry[name] = constructor
         }
 

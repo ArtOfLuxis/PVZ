@@ -2,14 +2,15 @@ package game.scenes
 
 import game.objects.*
 import game.objects.logic.*
+import game.types.*
 import getBitmap
-import korlibs.image.color.*
 import korlibs.korge.scene.Scene
 import korlibs.korge.view.*
 import korlibs.math.geom.vector.*
 import korlibs.time.*
-import lawn.LawnType
+import game.types.LawnType
 import registries.*
+import trait.events.alive.*
 
 class InGameScene(
     val lawnType: LawnType
@@ -32,37 +33,43 @@ class InGameScene(
             zIndex = -99999.0
         }
 
-        val plantType = PlantRegistry.get("peashooter")
-        val peashooter = LawnPlant(
-            lawnType.getTileCenter(1, 2), 2,
-            HitboxRegistry.get("commonPlantHitHitbox"),
-            TeamRegistry.get("plants"), this@InGameScene,
-            null, hashSetOf(), plantType.toughness, plantType,
-            mutableListOf()
+        this@InGameScene.putPlantByType(
+            1, 2,
+            PlantRegistry.get("peashooter"),
+            TeamRegistry.get("plants")
         )
-        plantType.traits.forEach { peashooter.traits.add(it.createInstance(peashooter)) }
-        this@InGameScene.putPlant(peashooter)
+        this@InGameScene.putPlantByType(
+            1, 4,
+            PlantRegistry.get("peashooter"),
+            TeamRegistry.get("plants")
+        ).applyEffect(EffectRegistry.get("chill"), Double.POSITIVE_INFINITY)
 
-        val zombieType = ZombieRegistry.get("modern-basic")
-        this@InGameScene.putZombie(
-            LawnZombie(
-            lawnType.getTileCenter(9, 2), 2,
-            HitboxRegistry.get("commonZombieHitHitbox"),
-            TeamRegistry.get("zombies"), this@InGameScene,
-            null, hashSetOf(), zombieType.toughness, zombieType,
-            mutableListOf()
-        )
-        )
-        this@InGameScene.putZombie(
-            LawnZombie(
-                lawnType.getTileCenter(8, 2), 2,
-                HitboxRegistry.get("commonZombieHitHitbox"),
-                TeamRegistry.get("zombies"), this@InGameScene,
-                null, hashSetOf(), zombieType.toughness, zombieType,
-                mutableListOf(EffectRegistry.get("chill"))
-            )
+
+        this@InGameScene.putZombieByType(
+            9, 2,
+            ZombieRegistry.get("modern_basic"),
+            TeamRegistry.get("zombies")
         )
 
+        this@InGameScene.putZombieByType(
+            10, 2,
+            ZombieRegistry.get("modern_basic"),
+            TeamRegistry.get("zombies")
+        )
+
+        this@InGameScene.putZombieByType(
+            9, 4,
+            ZombieRegistry.get("modern_basic"),
+            TeamRegistry.get("zombies")
+        )
+
+        this@InGameScene.putZombieByType(
+            10, 4,
+            ZombieRegistry.get("modern_basic"),
+            TeamRegistry.get("zombies")
+        )
+
+        var hitboxTimer = 0.0
         addUpdater { deltaTime ->
             val dt = deltaTime.seconds
 
@@ -72,7 +79,7 @@ class InGameScene(
             }
 
             if (pendingToDeleteObjects.isNotEmpty()) {
-                lawnObjects.removeAll(pendingToDeleteObjects)
+                lawnObjects.removeAll { it in pendingToDeleteObjects }
                 pendingToDeleteObjects.clear()
             }
 
@@ -81,12 +88,16 @@ class InGameScene(
             }
 
             if (GlobalRegistry.showDebugHitboxes!!) {
-                hitboxLayer.updateShape {
-                    clear()
-                    lawnObjects.forEach { obj ->
-                        val r = obj.hitHitbox.bounds(obj.pos, lawnType)
-                        stroke(korlibs.image.color.Colors.RED, StrokeInfo(2.0)) {
-                            rect(r.left, r.top, r.width, r.height)
+                hitboxTimer += dt
+                if (hitboxTimer >= GlobalRegistry.debugHitboxUpdateInterval!!) {
+                    hitboxTimer = 0.0
+                    hitboxLayer.updateShape {
+                        clear()
+                        lawnObjects.forEach { obj ->
+                            val r = obj.hitHitbox.bounds(obj.pos, lawnType)
+                            stroke(korlibs.image.color.Colors.RED, StrokeInfo(2.0)) {
+                                rect(r.left, r.top, r.width, r.height)
+                            }
                         }
                     }
                 }
@@ -106,6 +117,44 @@ class InGameScene(
         obj: LawnProjectile
     ) = sContainer.putObject(obj, 0.5, 0.5, lawnType.plantSize)
 
+    fun putPlantByType(column: Int, row: Int, plantType: PlantType, team: ObjectTeam): LawnPlant {
+        val plant = LawnPlant(
+            lawnType.getTileCenter(column, row),
+            row,
+            plantType.hitHitbox,
+            team,
+            this,
+            null,
+            hashSetOf(),
+            plantType.toughness,
+            hashMapOf(),
+            plantType
+        )
+        plantType.traits.forEach { plant.traits.add(it.createInstance(plant)) }
+        putPlant(plant)
+
+        return plant
+    }
+
+    fun putZombieByType(column: Int, row: Int, zombieType: ZombieType, team: ObjectTeam): LawnZombie {
+        val zombie = LawnZombie(
+            lawnType.getTileCenter(column, row),
+            row,
+            zombieType.hitHitbox,
+            team,
+            this,
+            null,
+            hashSetOf(),
+            zombieType.toughness,
+            hashMapOf(),
+            zombieType
+        )
+        zombieType.traits.forEach { zombie.traits.add(it.createInstance(zombie)) }
+        putZombie(zombie)
+
+        return zombie
+    }
+
     private fun SContainer.putObject(
         obj: LawnObject,
         anchorX: Double,
@@ -115,7 +164,7 @@ class InGameScene(
         val position = obj.pos
         pendingObjects.add(obj)
 
-        obj.image = image(getBitmap(obj.asset())) {
+        obj.setNewImage(image(getBitmap(obj.asset())) {
             anchor(anchorX, anchorY)
             scale(scale)
             position(position.x, position.y + lawnType.tileSize.second * when (obj) {
@@ -125,7 +174,9 @@ class InGameScene(
             })
             smoothing = false
             zIndex = 100.0
-        }
+        })
+
+        if (obj is ObjectCreatedTraitListener) obj.onCreation()
     }
 
     fun removeObject(

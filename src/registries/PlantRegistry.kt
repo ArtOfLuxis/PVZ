@@ -1,9 +1,9 @@
 package registries
 
+import game.types.*
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
 import loadBitmap
-import plant.*
 import trait.*
 
 data object PlantRegistry : Registry {
@@ -19,6 +19,7 @@ data object PlantRegistry : Registry {
             val sunCost = value.jsonObject["sunCost"]!!.jsonPrimitive.int
             val refreshTime = value.jsonObject["refreshTime"]!!.jsonPrimitive.double
             val toughness = value.jsonObject["toughness"]!!.jsonPrimitive.double
+            val hitHitbox = HitboxRegistry.get(value.jsonObject["hitHitbox"]!!.jsonPrimitive.content)
             val spriteAsset = value.jsonObject["sprite"]!!.jsonPrimitive.content
             val packetAsset = value.jsonObject["spritePacket"]!!.jsonPrimitive.content
             loadBitmap(spriteAsset)
@@ -36,7 +37,8 @@ data object PlantRegistry : Registry {
 
             plants[id] = PlantType(
                 id, name, sunCost, refreshTime, toughness,
-                spriteAsset, packetAsset, traits
+                hitHitbox, spriteAsset, packetAsset,
+                traits
             )
         }
     }

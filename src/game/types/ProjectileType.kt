@@ -1,7 +1,6 @@
-package projectile
+package game.types
 
 import game.hitbox.*
-import korlibs.io.file.*
 import trait.*
 
 data class ProjectileType(

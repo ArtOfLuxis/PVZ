@@ -4,15 +4,16 @@
     "visuals": [
       {
         "type": "tint",
-        "color": "#70b7cf",
-        "alpha": 80
+        "color": "#587ae0",
+        "alpha": 255
       }
     ],
     "effects": [
       {
         "type": "SPEED",
         "value": 0.6,
-        "modifier": "MULTIPLICATION"
+        "operation": "MULTIPLICATION",
+        "order": "MULTIPLICATION"
       }
     ]
   }
