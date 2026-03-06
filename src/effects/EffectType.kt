@@ -1,9 +1,7 @@
 package effects
 
-import effects.visual.*
-
 class EffectType(
-    val id: String,
-    val visuals: HashSet<EffectVisual>,
-    val effects: HashSet<Effect>
+    val type: EffectModifierType,
+    val value: Double,
+    val modifier: ModifierType
 )

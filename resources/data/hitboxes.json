@@ -1,11 +1,30 @@
 [
   {
-    "id": "commonHitHitbox",
-    "width": 0.75,
-    "height": 0.75,
+    "id": "commonPlantHitHitbox",
+    "width": 0.9,
+    "height": 0.9,
     "xOffset": 0.0,
     "yOffset": 0.0,
-    "center": "CENTER"
+    "center": "CENTER",
+    "affectOtherRows": false
+  },
+  {
+    "id": "commonZombieHitHitbox",
+    "width": 0.9,
+    "height": 1.3,
+    "xOffset": 0.0,
+    "yOffset": 0.25,
+    "center": "BOTTOM",
+    "affectOtherRows": false
+  },
+  {
+    "id": "commonProjectileHitbox",
+    "width": 0.2,
+    "height": 0.2,
+    "xOffset": 0.0,
+    "yOffset": 0.0,
+    "center": "CENTER",
+    "affectOtherRows": false
   },
   {
     "id": "straightOneLaneDetectionHitbox",
@@ -13,6 +32,7 @@
     "height": 0.4,
     "xOffset": 0.0,
     "yOffset": 0.6,
-    "center": "CENTER_LEFT"
+    "center": "CENTER_LEFT",
+    "affectOtherRows": false
   }
 ]

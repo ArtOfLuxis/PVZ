@@ -8,8 +8,8 @@ data class PlantType(
     val name: String,
     val sunCost: Int,
     val refreshTime: Double,
-    val toughness: Int,
-    val spriteAsset: VfsFile,
-    val packetAsset: VfsFile,
+    val toughness: Double,
+    val spriteAsset: String,
+    val packetAsset: String,
     val traits: HashSet<Trait>
 )

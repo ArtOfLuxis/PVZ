@@ -4,24 +4,26 @@ import korlibs.io.file.*
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
 import lawn.*
+import loadBitmap
 import plant.*
 import trait.*
 
-object SpriteRegistry {
-    val sprites = HashMap<String, VfsFile>()
+data object SpriteRegistry : Registry {
+    val sprites = HashMap<String, String>()
 
-    suspend fun load() {
+    override suspend fun load() {
         val text = resourcesVfs["data/sprites.json"].readString()
         val json = Json.parseToJsonElement(text).jsonArray
 
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
             val asset = value.jsonObject["asset"]!!.jsonPrimitive.content
+            loadBitmap(asset)
 
-            sprites[id] = resourcesVfs[asset]
+            sprites[id] = asset
         }
     }
 
-    fun get(id: String): VfsFile =
+    fun get(id: String): String =
         sprites[id] ?: error("Unknown sprite id: $id")
 }

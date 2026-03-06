@@ -1,3 +1,4 @@
 {
-  "iconAsset": "textures/icon.png"
+  "iconAsset": "textures/icon.png",
+  "showDebugHitboxes": true
 }

@@ -3,14 +3,20 @@ package registries
 import korlibs.io.file.*
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
+import loadBitmap
 
-object GlobalRegistry {
-    lateinit var iconAsset: String
+data object GlobalRegistry : Registry {
+    var iconAsset: String? = null
+        private set
+    var showDebugHitboxes: Boolean? = null
+        private set
 
-    suspend fun load() {
+    override suspend fun load() {
         val text = resourcesVfs["data/global.json"].readString()
         val json = Json.parseToJsonElement(text).jsonObject
 
         iconAsset = json["iconAsset"]!!.jsonPrimitive.content
+        loadBitmap(iconAsset!!)
+        showDebugHitboxes = json["showDebugHitboxes"]!!.jsonPrimitive.boolean
     }
 }

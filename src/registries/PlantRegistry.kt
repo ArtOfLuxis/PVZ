@@ -2,13 +2,14 @@ package registries
 
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
+import loadBitmap
 import plant.*
 import trait.*
 
-object PlantRegistry {
+data object PlantRegistry : Registry {
     val plants = HashMap<String, PlantType>()
 
-    suspend fun load() {
+    override suspend fun load() {
         val text = resourcesVfs["data/plants.json"].readString()
         val json = Json.parseToJsonElement(text).jsonArray
 
@@ -17,9 +18,11 @@ object PlantRegistry {
             val name = value.jsonObject["name"]!!.jsonPrimitive.content
             val sunCost = value.jsonObject["sunCost"]!!.jsonPrimitive.int
             val refreshTime = value.jsonObject["refreshTime"]!!.jsonPrimitive.double
-            val toughness = value.jsonObject["toughness"]!!.jsonPrimitive.int
+            val toughness = value.jsonObject["toughness"]!!.jsonPrimitive.double
             val spriteAsset = value.jsonObject["sprite"]!!.jsonPrimitive.content
             val packetAsset = value.jsonObject["spritePacket"]!!.jsonPrimitive.content
+            loadBitmap(spriteAsset)
+            loadBitmap(packetAsset)
 
             val traits = hashSetOf<Trait>()
             value.jsonObject["traits"]!!.jsonArray.forEach { obj ->
@@ -33,8 +36,7 @@ object PlantRegistry {
 
             plants[id] = PlantType(
                 id, name, sunCost, refreshTime, toughness,
-                resourcesVfs[spriteAsset], resourcesVfs[packetAsset],
-                traits
+                spriteAsset, packetAsset, traits
             )
         }
     }

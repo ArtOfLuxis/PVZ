@@ -16,10 +16,4 @@ class EffectApplierTileTrait(
         val values = deserialize(jsonObject)
         effect = values["effect"] as String
     }
-
-    override fun toString() = """
-        EffectApplierTrait[
-            effect=$effect
-        ]
-    """.trimIndent()
 }

@@ -6,10 +6,10 @@ import lawn.*
 import plant.*
 import trait.*
 
-object SunDropperRegistry {
+data object SunDropperRegistry : Registry {
     val sunDroppers = HashMap<String, SunDropper>()
 
-    suspend fun load() {
+    override suspend fun load() {
         val text = resourcesVfs["data/sundroppers.json"].readString()
         val json = Json.parseToJsonElement(text).jsonArray
 

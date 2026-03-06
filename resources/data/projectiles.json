@@ -3,17 +3,54 @@
     "id": "pea",
     "asset": "textures/projectiles/pea.png",
     "damage": 20,
-    "traits": []
+    "detectionHitbox": "commonProjectileHitbox",
+    "traits": [
+      {
+        "id": "CommonProjectileLogic",
+        "speed": 8.0
+      },
+      {
+        "id": "FlammableProjectile",
+        "visuals": [
+          {
+            "type": "SWAP_ASSET",
+            "newAsset": "textures/projectiles/fire_pea.png"
+          }
+        ],
+        "effects": [
+          {
+            "type": "DAMAGE",
+            "value": 2.0,
+            "modifier": "MULTIPLICATION"
+          }
+        ]
+      }
+    ]
   },
   {
     "id": "snow_pea",
-    "asset": "textures/projectiles/pea.png",
+    "asset": "textures/projectiles/snow_pea.png",
     "damage": 20,
+    "detectionHitbox": "commonProjectileHitbox",
     "traits": [
+      {
+        "id": "CommonProjectileLogic",
+        "speed": 8.0
+      },
       {
         "id": "EffectApplier",
         "effect": "chill",
         "effectTime": 5.0
+      },
+      {
+        "id": "FlammableProjectile",
+        "visuals": [
+          {
+            "type": "SWAP_PROJECTILE_TYPE",
+            "newProjectileType": "pea"
+          }
+        ],
+        "effects": []
       }
     ]
   }

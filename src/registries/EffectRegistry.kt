@@ -5,10 +5,10 @@ import effects.visual.*
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
 
-object EffectRegistry {
-    val effectTypes = HashMap<String, EffectType>()
+data object EffectRegistry : Registry {
+    val effectTypes = HashMap<String, Effect>()
 
-    suspend fun load() {
+    override suspend fun load() {
         val text = resourcesVfs["data/effects.json"].readString()
         val json = Json.parseToJsonElement(text).jsonArray
 
@@ -23,7 +23,7 @@ object EffectRegistry {
                 effectVisuals.add(effectVisual)
             }
 
-            val effects = hashSetOf<Effect>()
+            val effect1s = hashSetOf<EffectType>()
             value.jsonObject["effects"]!!.jsonArray.forEach { obj ->
                 val effectType = EffectModifierType.valueOf(
                     obj.jsonObject["type"]!!.jsonPrimitive.content.uppercase()
@@ -32,17 +32,17 @@ object EffectRegistry {
                 val effectModifier = ModifierType.valueOf(
                     obj.jsonObject["modifier"]!!.jsonPrimitive.content
                 )
-                val effect = Effect(effectType, effectValue, effectModifier)
+                val effect1 = EffectType(effectType, effectValue, effectModifier)
 
-                effects.add(effect)
+                effect1s.add(effect1)
             }
 
-            effectTypes[id] = EffectType(
-                id, effectVisuals, effects
+            effectTypes[id] = Effect(
+                id, effectVisuals, effect1s
             )
         }
     }
 
-    fun get(id: String): EffectType =
+    fun get(id: String): Effect =
         effectTypes[id] ?: error("Unknown effect id: $id")
 }

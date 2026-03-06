@@ -3,18 +3,20 @@ package registries
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
 import lawn.*
+import loadBitmap
 import tile.*
 
-object LawnRegistry {
+data object LawnRegistry : Registry {
     val lawns = HashMap<String, LawnType>()
 
-    suspend fun load() {
+    override suspend fun load() {
         val text = resourcesVfs["data/lawns.json"].readString()
         val json = Json.parseToJsonElement(text).jsonArray
 
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
             val asset = value.jsonObject["asset"]!!.jsonPrimitive.content
+            loadBitmap(asset)
             val sunSprite = SpriteRegistry.get(value.jsonObject["sunSprite"]!!.jsonPrimitive.content)
             val rows = value.jsonObject["rows"]!!.jsonPrimitive.int
             val columns = value.jsonObject["columns"]!!.jsonPrimitive.int
@@ -49,7 +51,7 @@ object LawnRegistry {
                 }}
 
             lawns[id] = LawnType(
-                id, resourcesVfs[asset], sunSprite, rows, columns,
+                id, asset, sunSprite, rows, columns,
                 tileSize, lawnUpperLeftCorner,
                 plantSize, zombieSize, defaultTile, tileSet,
                 fullTileSet.size, fullTileSet.map { it.size }

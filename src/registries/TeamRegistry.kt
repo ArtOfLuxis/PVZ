@@ -1,14 +1,13 @@
 package registries
 
-import game.*
-import korlibs.io.file.*
+import game.objects.*
 import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
 
-object TeamRegistry {
+data object TeamRegistry : Registry {
     val teams = HashMap<String, ObjectTeam>()
 
-    suspend fun load() {
+    override suspend fun load() {
         val text = resourcesVfs["data/teams.json"].readString()
         val json = Json.parseToJsonElement(text).jsonArray
 

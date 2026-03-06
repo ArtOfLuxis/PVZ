@@ -1,5 +1,6 @@
 package serializers
 
+import game.hitbox.*
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*
@@ -16,6 +17,6 @@ object ProjectileTypeSerializer : KSerializer<ProjectileType> {
     }
 
     override fun serialize(encoder: Encoder, value: ProjectileType) {
-        encoder.encodeString(value.id)
+        throw IllegalStateException("This is not supposed to be serialized")
     }
 }

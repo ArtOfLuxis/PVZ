@@ -8,7 +8,7 @@
     "columns": 9,
     "tileSize": [60, 64],
     "lawnUpperLeftCorner": [192, 158],
-    "plantSize": 0.9,
+    "plantSize": 1.0,
     "zombieSize": 1.0,
     "defaultTile": "ground",
     "tileKeys": {

@@ -1,49 +1,52 @@
 package game.hitbox
 
 import Position
+import korlibs.image.color.*
+import korlibs.korge.view.*
+import lawn.LawnType
+import korlibs.math.geom.Rectangle
 
 class Hitbox(
     val id: String,
-    val width: Double,
-    val height: Double,
-    val xOffset: Double,
-    val yOffset: Double,
-    val hitboxCenter: HitboxCenter
+    val width: Double,       // relative to tileSize
+    val height: Double,      // relative to tileSize
+    val xOffset: Double,     // relative to tileSize
+    val yOffset: Double,     // relative to tileSize
+    val hitboxCenter: HitboxCenter,
+    val affectOtherRows: Boolean
 ) {
+    fun bounds(pos: Position, lawnType: LawnType): Rectangle {
+        val tileW = lawnType.tileSize.first.toDouble()
+        val tileH = lawnType.tileSize.second.toDouble()
 
-    operator fun contains(pos: Position): Boolean {
+        val w = width * tileW
+        val h = height * tileH
+        val ox = xOffset * tileW
+        val oy = yOffset * tileH
+
         val ax = hitboxCenter.ordinal % 3 * 0.5
         val ay = hitboxCenter.ordinal / 3 * 0.5
 
-        val left = xOffset - width * ax
-        val top = yOffset - height * ay
-        val right = left + width
-        val bottom = top + height
+        val left = pos.x + ox - w * ax
+        val top = pos.y + oy - h * ay
 
-        return pos.x in left..right && pos.y in top..bottom
+        return Rectangle(left, top, w, h)
     }
 
-    operator fun contains(other: Hitbox): Boolean {
-        // compute this hitbox bounds
-        val ax1 = hitboxCenter.ordinal % 3 * 0.5
-        val ay1 = hitboxCenter.ordinal / 3 * 0.5
-        val left1 = xOffset - width * ax1
-        val top1 = yOffset - height * ay1
-        val right1 = left1 + width
-        val bottom1 = top1 + height
+    // AABB intersection with a point
+    fun contains(hitboxPosition: Position, point: Position, lawnType: LawnType): Boolean {
+        val r = bounds(hitboxPosition, lawnType)
+        return point.x in r.left..r.right && point.y in r.top..r.bottom
+    }
 
-        // compute other hitbox bounds
-        val ax2 = other.hitboxCenter.ordinal % 3 * 0.5
-        val ay2 = other.hitboxCenter.ordinal / 3 * 0.5
-        val left2 = other.xOffset - other.width * ax2
-        val top2 = other.yOffset - other.height * ay2
-        val right2 = left2 + other.width
-        val bottom2 = top2 + other.height
+    // AABB intersection with another hitbox
+    fun contains(other: Hitbox, hitboxPosition: Position, otherHitboxPos: Position, lawnType: LawnType): Boolean {
+        val r1 = this.bounds(hitboxPosition, lawnType)
+        val r2 = other.bounds(otherHitboxPos, lawnType)
 
-        // check if all corners of 'other' are inside this hitbox
-        return left2 >= left1 &&
-            right2 <= right1 &&
-            top2 >= top1 &&
-            bottom2 <= bottom1
+        return r1.left < r2.right &&
+            r1.right > r2.left &&
+            r1.top < r2.bottom &&
+            r1.bottom > r2.top
     }
 }

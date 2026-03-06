@@ -1,51 +1,43 @@
 package plant.traits
 
+import Position
+import game.objects.*
+import game.objects.logic.*
 import kotlinx.serialization.builtins.*
 import kotlinx.serialization.json.*
 import projectile.*
 import serializers.*
 import trait.*
 
-@Suppress("UNCHECKED_CAST")
 class StraightShooterTrait(
     jsonObject: JsonObject
-) : Trait(hashMapOf(
-    "projectile" to ProjectileTypeSerializer,
-    "interval" to Double.serializer(),
-    "additionalInterval" to Double.serializer(),
-    "projectileAmount" to Int.serializer(),
-    "projectileInterval" to Double.serializer(),
-    "attackRows" to ListSerializer(Int.serializer()),
-    "projectileInEachRow" to Boolean.serializer(),
-), TraitType.PLANT) {
-    private val projectile: ProjectileType
-    private val interval: Double
-    private val additionalInterval: Double
-    private val projectileAmount: Int
-    private val projectileInterval: Double
-    private val attackRows: List<Int>
-    private val projectileInEachRow: Boolean
+) : Trait(
+    mapOf(
+        "projectile" to ProjectileTypeSerializer,
+        "projectilePositionOffset" to PositionSerializer,
+        "interval" to Double.serializer(),
+        "additionalInterval" to Double.serializer(),
+        "detectionHitbox" to HitboxSerializer,
+        "projectileAmount" to Int.serializer(),
+        "projectileInterval" to Double.serializer(),
+        "attackRows" to ListSerializer(Int.serializer()),
+    ),
+    TraitType.PLANT
+) {
+    override val values = deserialize(jsonObject)
 
-    init {
-        val values = deserialize(jsonObject)
-        projectile = values["projectile"] as ProjectileType
-        interval = values["interval"] as Double
-        additionalInterval = values["additionalInterval"] as Double
-        projectileAmount = values["projectileAmount"] as Int
-        projectileInterval = values["projectileInterval"] as Double
-        attackRows = values["attackRows"] as List<Int>
-        projectileInEachRow = values["projectileInEachRow"] as Boolean
+    val projectile get() = get<ProjectileType>("projectile")
+    val projectilePositionOffset get() = get<Position>("projectilePositionOffset")
+    val interval get() = get<Double>("interval")
+    val additionalInterval get() = get<Double>("additionalInterval")
+    val projectileAmount get() = get<Int>("projectileAmount")
+    val projectileInterval get() = get<Double>("projectileInterval")
+    val attackRows get() = get<List<Int>>("attackRows")
+
+    override fun createInstance(parent: LawnObject): TraitInstance {
+        require(parent is LawnPlant) {
+            "Parent for ${this::class.simpleName} must be a ${LawnPlant::class.simpleName}, found a ${parent::class.simpleName}"
+        }
+        return StraightShooterInstance(parent, this)
     }
-
-    override fun toString() = """
-        StraightShooterTrait[
-            projectile=$projectile, 
-            interval=$interval,
-            additionalInterval=$additionalInterval,
-            projectileAmount=$projectileAmount,
-            projectileInterval=$projectileInterval,
-            attackRows=$attackRows,
-            projectileInEachRow=$projectileInEachRow
-        ]
-    """.trimIndent()
 }

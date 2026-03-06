@@ -8,10 +8,10 @@ import lawn.*
 import plant.*
 import trait.*
 
-object HitboxRegistry {
+data object HitboxRegistry : Registry {
     val hitboxes = HashMap<String, Hitbox>()
 
-    suspend fun load() {
+    override suspend fun load() {
         val text = resourcesVfs["data/hitboxes.json"].readString()
         val json = Json.parseToJsonElement(text).jsonArray
 
@@ -22,8 +22,9 @@ object HitboxRegistry {
             val xOffset = value.jsonObject["xOffset"]!!.jsonPrimitive.double
             val yOffset = value.jsonObject["yOffset"]!!.jsonPrimitive.double
             val center = HitboxCenter.valueOf(value.jsonObject["center"]!!.jsonPrimitive.content)
+            val affectOtherRows = value.jsonObject["affectOtherRows"]!!.jsonPrimitive.boolean
 
-            hitboxes[id] = Hitbox(id, width, height, xOffset, yOffset, center)
+            hitboxes[id] = Hitbox(id, width, height, xOffset, yOffset, center, affectOtherRows)
         }
     }
 

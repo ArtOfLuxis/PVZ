@@ -4,21 +4,21 @@
     "name": "Peashooter",
     "sunCost": 100,
     "refreshTime": 5.0,
-    "toughness": 300,
-    "damageHitbox": "commonHitHitbox",
+    "toughness": 300.0,
+    "damageHitbox": "commonPlantHitHitbox",
     "sprite": "textures/plants/sprites/peashooter.png",
     "spritePacket": "textures/plants/packets/peashooter.png",
     "traits": [
       {
         "id": "StraightShooter",
-        "projectile": "pea",
+        "projectile": "snow_pea",
+        "projectilePositionOffset": [0.25, -0.4],
         "interval": 1.35,
         "additionalInterval": 0.15,
         "detectionHitbox": "straightOneLaneDetectionHitbox",
         "projectileAmount": 1,
         "projectileInterval": 0.1,
-        "attackRows": [-1, 0, 1],
-        "projectileInEachRow": true
+        "attackRows": [0]
       }
     ]
   }

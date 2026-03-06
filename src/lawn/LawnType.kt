@@ -6,8 +6,8 @@ import tile.*
 
 class LawnType(
     val id: String,
-    val asset: VfsFile,
-    val sunSprite: VfsFile,
+    val asset: String,
+    val sunSprite: String,
     val rows: Int,
     val columns: Int,
     val tileSize: Pair<Int, Int>,
@@ -31,8 +31,9 @@ class LawnType(
     }
 
     fun getTileCenter(x: Int, y: Int): Position {
-        return Position( (x - 0.5) * tileSize.first.toDouble()  + lawnUpperLeftCorner.first,
-                         (y - 0.5) * tileSize.second.toDouble() + lawnUpperLeftCorner.second
+        return Position(
+            (x - 0.5) * tileSize.first.toDouble()  + lawnUpperLeftCorner.first,
+            (y - 0.5) * tileSize.second.toDouble() + lawnUpperLeftCorner.second
         )
     }
 }
