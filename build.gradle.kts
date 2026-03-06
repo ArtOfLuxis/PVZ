@@ -4,16 +4,20 @@ plugins {
 	alias(libs.plugins.korge)
 }
 
+val groupName = "me.artofluxis.game"
+group = groupName
+
 korge {
-	id = "com.sample.demo"
+	id = groupName
 	
 	targetJvm()
 	targetDesktop()
 
 	serializationJson()
     serialization()
-}
 
+    jvmMainClassName = "$groupName.MainKt"
+}
 
 dependencies {
     add("commonMainApi", project(":deps"))
