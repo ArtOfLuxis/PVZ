@@ -1,16 +1,9 @@
 package me.artofluxis.game.game.objects
 
-import me.artofluxis.game.game.hitbox.*
 import me.artofluxis.game.game.objects.logic.*
 import me.artofluxis.game.trait.events.alive.*
 
-abstract class DamageableLawnObject(
-    open val hitHitbox: Hitbox
-) : TickableLawnObject() {
-    fun findIntersectingObjects(filter: (LawnObject, Hitbox) -> Boolean): List<LawnObject> {
-        return this.hitHitbox.findIntersectingObjects(this, filter)
-    }
-
+abstract class DamageableLawnObject : TickableLawnObject() {
     fun hitByProjectile(projectile: LawnProjectile, damage: Double) {
         val snapshot = getTraitsSnapshot()
         for (it in snapshot) {

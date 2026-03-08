@@ -5,9 +5,7 @@ import me.artofluxis.game.effects.*
 import me.artofluxis.game.game.hitbox.*
 import me.artofluxis.game.trait.events.alive.*
 
-abstract class AliveLawnObject(
-    hitHitbox: Hitbox
-) : DamageableLawnObject(hitHitbox) {
+abstract class AliveLawnObject : DamageableLawnObject() {
     open val effects = hashMapOf<Effect, Timer>()
 
     fun applyEffect(effect: Effect, effectTime: Double) {

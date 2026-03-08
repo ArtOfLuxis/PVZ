@@ -15,7 +15,7 @@ import me.artofluxis.game.trait.events.alive.*
 class LawnProjectile(
     override var pos: Position,
     override val row: Int,
-    override var team: ObjectTeam,
+    override var team: ObjectTeam?,
     override val scene: InGameScene,
     override var image: Image?,
     override val traits: HashSet<TraitInstance>,
@@ -24,6 +24,7 @@ class LawnProjectile(
 ): TickableLawnObject() {
     override val highlightFilter = parentShooter.highlightFilter
     override fun asset() = type.asset
+    override fun hitHitbox() = type.hitHitbox
 
     fun projectileHitObject(obj: LawnObject, damage: Double) {
         traits.forEach {
@@ -33,5 +34,6 @@ class LawnProjectile(
 
     override fun toString(): String = "${this::class.simpleName}[${type.id}]"
 
-    override fun offset(): Pair<Double, Double> = 0.0 to 0.0
+    override fun scale() = 1.0
+    override fun offset() = 0.0 to 0.0
 }

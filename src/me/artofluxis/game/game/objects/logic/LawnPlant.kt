@@ -15,17 +15,17 @@ import me.artofluxis.game.trait.*
 class LawnPlant(
     override var pos: Position,
     override val row: Int,
-    override val hitHitbox: Hitbox,
-    override var team: ObjectTeam,
+    override var team: ObjectTeam?,
     override val scene: InGameScene,
     override var image: Image?,
     override val traits: HashSet<TraitInstance>,
     override val effects: HashMap<Effect, Timer>,
     val type: PlantType,
-): AliveLawnObject(hitHitbox) {
+): AliveLawnObject() {
     override val highlightFilter = HighlightFilter(mutableListOf())
 
     override fun asset() = type.spriteAsset
+    override fun hitHitbox() = type.hitHitbox
 
     override fun toString(): String = "${this::class.simpleName}[${type.id}]"
 }

@@ -18,20 +18,19 @@ import me.artofluxis.game.game.types.*
 import me.artofluxis.game.registries.*
 import me.artofluxis.game.trait.events.alive.*
 
+@Suppress("MemberVisibilityCanBePrivate")
 class InGameScene(
     val lawnType: LawnType
 ) : Scene() {
-    private lateinit var hitboxLayer: Graphics
     private lateinit var sContainer: SContainer
     val lawnObjects = mutableListOf<LawnObject>()
     private val pendingObjects = mutableListOf<LawnObject>()
     private val pendingToDeleteObjects = mutableListOf<LawnObject>()
 
-    var paused = false
-    var pauseOverlay: Container? = null
+    private var paused = false
+    private var pauseOverlay: Container? = null
 
     override suspend fun SContainer.sceneMain() {
-        hitboxLayer = graphics {}
         sContainer = this
 
         image(BitmapLoader.getBitmap(lawnType.asset)) {
@@ -52,55 +51,37 @@ class InGameScene(
             }
         }
 
-        this@InGameScene.putPlantByType(
-            1, 2,
-            PlantRegistry.get("peashooter"),
-            TeamRegistry.get("plants")
-        )
+        lawnType.tileSet.forEachIndexed { row, rows ->
+            rows.forEachIndexed { column, tile ->
+                if (tile.asset != null && tile.traits.isNotEmpty())
+                    putTileByType(column + 1, row + 1, tile)
+            }
+        }
+
         this@InGameScene.putPlantByType(
             1, 4,
             PlantRegistry.get("peashooter"),
             TeamRegistry.get("plants")
-        ).applyEffect(EffectRegistry.get("chill"), Double.POSITIVE_INFINITY)
-
+        )
 
         this@InGameScene.putZombieByType(
             9, 2,
             ZombieRegistry.get("modern_basic"),
             TeamRegistry.get("zombies")
-        ).applyEffect(EffectRegistry.get("chill"), Double.POSITIVE_INFINITY)
-        this@InGameScene.putZombieByType(
-            10, 2,
-            ZombieRegistry.get("modern_basic"),
-            TeamRegistry.get("zombies")
-        ).applyEffect(EffectRegistry.get("chill"), Double.POSITIVE_INFINITY)
-        this@InGameScene.putZombieByType(
-            11, 2,
-            ZombieRegistry.get("modern_basic"),
-            TeamRegistry.get("zombies")
-        ).applyEffect(EffectRegistry.get("chill"), Double.POSITIVE_INFINITY)
+        )
 
         this@InGameScene.putZombieByType(
             9, 4,
             ZombieRegistry.get("modern_basic"),
             TeamRegistry.get("zombies")
-        ).applyEffect(EffectRegistry.get("chill"), Double.POSITIVE_INFINITY)
-        this@InGameScene.putZombieByType(
-            10, 4,
-            ZombieRegistry.get("modern_basic"),
-            TeamRegistry.get("zombies")
-        ).applyEffect(EffectRegistry.get("chill"), Double.POSITIVE_INFINITY)
-        this@InGameScene.putZombieByType(
-            11, 4,
-            ZombieRegistry.get("modern_basic"),
-            TeamRegistry.get("zombies")
-        ).applyEffect(EffectRegistry.get("chill"), Double.POSITIVE_INFINITY)
+        )
+
 
         val fpsText = text("FPS: 0") {
             position(4, 4)
-            textSize = 16.0
+            textSize = 20.0
             color = Colors.WHITE
-            zIndex = 10000000.0
+            zIndex = 10000.0
         }
 
         val frameTimes = ArrayDeque<Double>()
@@ -160,7 +141,9 @@ class InGameScene(
 
                         for (obj in lawnObjects) {
                             if (obj is DamageableLawnObject) {
-                                debugHitboxes.add(obj.hitHitbox to obj)
+                                val hitbox = obj.hitHitbox()
+                                if (hitbox != null)
+                                    debugHitboxes.add(hitbox to obj)
                             }
 
                             if (obj is TickableLawnObject) {
@@ -218,12 +201,13 @@ class InGameScene(
         sContainer.putObject(obj, 0.5, 1.0)
     fun putProjectile(obj: LawnProjectile) =
         sContainer.putObject(obj, 0.5, 0.5)
+    fun putTile(obj: LawnTile) =
+        sContainer.putObject(obj, 0.5, 0.5)
 
     fun putPlantByType(column: Int, row: Int, plantType: PlantType, team: ObjectTeam): LawnPlant {
         val plant = LawnPlant(
             lawnType.getTileCenter(column, row),
             row,
-            plantType.hitHitbox,
             team,
             this,
             null,
@@ -241,7 +225,6 @@ class InGameScene(
         val zombie = LawnZombie(
             lawnType.getTileCenter(column, row),
             row,
-            zombieType.hitHitbox,
             team,
             this,
             null,
@@ -272,6 +255,21 @@ class InGameScene(
         return projectile
     }
 
+    fun putTileByType(column: Int, row: Int, tileType: TileType): LawnTile {
+        val tile = LawnTile(
+            lawnType.getTileCenter(column, row),
+            row,
+            this,
+            null,
+            hashSetOf(),
+            tileType
+        )
+        tileType.traits.forEach { tile.addTrait(it.createInstance(tile)) }
+        putTile(tile)
+
+        return tile
+    }
+
     private fun SContainer.putObject(obj: LawnObject, anchorX: Double, anchorY: Double) {
         val position = obj.pos
         pendingObjects.add(obj)
@@ -280,12 +278,17 @@ class InGameScene(
         if (asset != null) obj.setNewImage(image(BitmapLoader.getBitmap(asset)) {
             anchor(anchorX, anchorY)
             scale(obj.scale())
+            if (obj is LawnTile) {
+                println(obj.team)
+                println(obj.offset())
+                println(position.y + lawnType.tileSize.second * obj.offset().second * obj.scale())
+            }
             position(
                 position.x + lawnType.tileSize.first  * obj.offset().first  * obj.scale(),
                 position.y + lawnType.tileSize.second * obj.offset().second * obj.scale()
             )
             smoothing = false
-            zIndex = 100.0
+            zIndex = 10.0
         })
 
         if (obj is ObjectCreatedTraitListener) obj.onCreation()
@@ -310,7 +313,7 @@ class InGameScene(
     fun SContainer.showPauseMenu() = container {
         xy(views.virtualWidth / 2, views.virtualHeight / 2) // center
         scale(1.0)
-        zIndex = 999999.0
+        zIndex = 9999999999.0
 
         // background
         solidRect(views.virtualWidth.toDouble(), views.virtualHeight.toDouble(), Colors.BLACK.withAd(0.6)) {

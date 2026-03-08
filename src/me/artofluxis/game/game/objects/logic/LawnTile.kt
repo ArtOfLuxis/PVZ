@@ -12,17 +12,20 @@ import me.artofluxis.game.trait.*
 class LawnTile(
     override var pos: Position,
     override val row: Int,
-    override var team: ObjectTeam,
     override val scene: InGameScene,
     override var image: Image?,
     override val traits: HashSet<TraitInstance>,
     val type: TileType,
 ): TickableLawnObject() {
+    override var team: ObjectTeam? = null
     override val highlightFilter = HighlightFilter(mutableListOf())
 
     override fun asset() = type.asset
 
+    override fun hitHitbox() = null
+
     override fun toString(): String = "${this::class.simpleName}[${type.id}]"
 
-    override fun offset(): Pair<Double, Double> = 0.0 to 0.0
+    override fun scale() = 1.0
+    override fun offset() = 0.0 to 0.0
 }

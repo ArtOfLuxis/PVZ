@@ -69,14 +69,14 @@ class Hitbox(
     fun isIntersecting(
         obj: LawnObject,
         otherObj: LawnObject,
+        otherHitbox: Hitbox,
         lawnType: LawnType,
         condition: (LawnObject, Hitbox) -> Boolean,
     ): Boolean {
         return otherObj != obj &&
-            otherObj is DamageableLawnObject &&
-            condition(otherObj, otherObj.hitHitbox) &&
+            condition(otherObj, otherHitbox) &&
             this.contains(
-                otherObj.hitHitbox,
+                otherHitbox,
                 obj.pos,
                 otherObj.pos,
                 lawnType,
@@ -85,10 +85,25 @@ class Hitbox(
             ) &&
             (
                 this.affectOtherRows ||
-                    otherObj.hitHitbox.affectOtherRows ||
+                    otherHitbox.affectOtherRows ||
                     (obj.row == otherObj.row)
-                )
+            )
     }
+
+    fun isIntersecting(
+        obj: LawnObject,
+        otherObj: LawnObject,
+        lawnType: LawnType,
+        condition: (LawnObject, Hitbox) -> Boolean,
+    ): Boolean {
+        return isIntersecting(
+            obj, otherObj,
+            otherObj.hitHitbox() ?: return false,
+            lawnType, condition
+        )
+    }
+
+    fun findIntersectingObjects(obj: LawnObject) = findIntersectingObjects(obj) { _, _ -> true }
 
     fun findIntersectingObjects(
         obj: LawnObject,

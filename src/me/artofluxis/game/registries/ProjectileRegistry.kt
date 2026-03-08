@@ -17,7 +17,7 @@ data object ProjectileRegistry : Registry {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
             val asset = value.jsonObject["asset"]!!.jsonPrimitive.content
             BitmapLoader.loadBitmap(asset)
-
+            val detectionHitbox = HitboxRegistry.get(value.jsonObject["detectionHitbox"]!!.jsonPrimitive.content)
             val traits = hashSetOf<Trait>()
             value.jsonObject["traits"]!!.jsonArray.forEach { obj ->
                 val traitID = obj.jsonObject["id"]!!.jsonPrimitive.content
@@ -28,7 +28,7 @@ data object ProjectileRegistry : Registry {
                 traits.add(trait)
             }
 
-            projectiles[id] = ProjectileType(id, asset, traits)
+            projectiles[id] = ProjectileType(id, asset, detectionHitbox, traits)
         }
     }
 

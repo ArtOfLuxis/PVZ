@@ -9,8 +9,8 @@
     "tileSize": [82, 97],
     "lawnUpperLeftCorner": [257, 204],
     "teamSizes": {
-      "plants": 0.6,
-      "zombies": 0.6
+      "plants": 1.0,
+      "zombies": 1.0
     },
     "teamOffsets": {
       "plants": [0.0, -0.25],
@@ -21,10 +21,10 @@
       "b": "ice"
     },
     "tileSet": [
-      "aaaaaaaba",
       "aaaaaaaaa",
+      "aaaaaabaa",
       "aaaaaaaaa",
-      "aaaaaaaaa",
+      "baaaaaaaa",
       "aaaaaaaaa"
     ]
   }

@@ -9,6 +9,10 @@
     "asset": "textures/tiles/ice.png",
     "traits": [
       {
+        "id": "OnTileLogic",
+        "tileHitbox": "tileHitbox"
+      },
+      {
         "id": "EffectApplierTile",
         "effect": "chill",
         "effectTime": 1.0

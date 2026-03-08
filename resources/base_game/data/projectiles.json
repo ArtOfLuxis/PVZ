@@ -2,10 +2,10 @@
   {
     "id": "pea",
     "asset": "textures/projectiles/pea.png",
+    "detectionHitbox": "commonProjectileHitbox",
     "traits": [
       {
         "id": "CollisionProjectileLogic",
-        "detectionHitbox": "commonProjectileHitbox",
         "damage": 20.0
       },
       {
@@ -17,10 +17,10 @@
   {
     "id": "fire_pea",
     "asset": "textures/projectiles/fire_pea.png",
+    "detectionHitbox": "commonProjectileHitbox",
     "traits": [
       {
         "id": "CollisionProjectileLogic",
-        "detectionHitbox": "commonProjectileHitbox",
         "damage": 40.0
       },
       {
@@ -32,10 +32,10 @@
   {
     "id": "snow_pea",
     "asset": "textures/projectiles/snow_pea.png",
+    "detectionHitbox": "commonProjectileHitbox",
     "traits": [
       {
         "id": "CollisionProjectileLogic",
-        "detectionHitbox": "commonProjectileHitbox",
         "damage": 20.0
       },
       {

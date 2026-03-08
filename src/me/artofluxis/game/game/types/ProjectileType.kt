@@ -6,6 +6,7 @@ import me.artofluxis.game.trait.*
 data class ProjectileType(
     val id: String,
     val asset: String,
+    val hitHitbox: Hitbox,
     val traits: HashSet<Trait>
 ) {
     override fun toString() = "${this::class.simpleName}[$id]"
