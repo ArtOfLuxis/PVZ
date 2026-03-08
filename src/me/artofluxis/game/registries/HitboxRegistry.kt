@@ -1,5 +1,6 @@
 package me.artofluxis.game.registries
 
+import korlibs.image.color.*
 import me.artofluxis.game.dataFolder
 import kotlinx.serialization.json.*
 import me.artofluxis.game.game.hitbox.*
@@ -20,8 +21,9 @@ data object HitboxRegistry : Registry {
             val yOffset = value.jsonObject["yOffset"]!!.jsonPrimitive.double
             val center = HitboxCenter.valueOf(value.jsonObject["center"]!!.jsonPrimitive.content)
             val affectOtherRows = value.jsonObject["affectOtherRows"]!!.jsonPrimitive.boolean
+            val debugColor = Colors[value.jsonObject["debugColor"]!!.jsonPrimitive.content]
 
-            hitboxes[id] = Hitbox(id, width, height, xOffset, yOffset, center, affectOtherRows)
+            hitboxes[id] = Hitbox(id, width, height, xOffset, yOffset, center, affectOtherRows, debugColor)
         }
     }
 

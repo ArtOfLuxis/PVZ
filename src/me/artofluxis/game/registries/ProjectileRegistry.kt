@@ -1,8 +1,7 @@
 package me.artofluxis.game.registries
 
-import me.artofluxis.game.dataFolder
 import kotlinx.serialization.json.*
-import me.artofluxis.game.loadBitmap
+import me.artofluxis.game.*
 import me.artofluxis.game.game.types.*
 import me.artofluxis.game.trait.*
 import java.io.*
@@ -17,10 +16,7 @@ data object ProjectileRegistry : Registry {
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
             val asset = value.jsonObject["asset"]!!.jsonPrimitive.content
-            loadBitmap(asset)
-            val damage = value.jsonObject["damage"]!!.jsonPrimitive.int
-            val detectionHitbox =
-                HitboxRegistry.get(value.jsonObject["detectionHitbox"]!!.jsonPrimitive.content)
+            BitmapLoader.loadBitmap(asset)
 
             val traits = hashSetOf<Trait>()
             value.jsonObject["traits"]!!.jsonArray.forEach { obj ->
@@ -28,11 +24,11 @@ data object ProjectileRegistry : Registry {
                 val trait = Trait.from(traitID, obj.jsonObject)
 
                 if (trait.traitType != TraitType.PROJECTILE)
-                    error("Non-projectile trait in a projectile definition\n$obj")
+                    error("Non-projectile trait in a projectile definition $obj")
                 traits.add(trait)
             }
 
-            projectiles[id] = ProjectileType(id, asset, damage, detectionHitbox, traits)
+            projectiles[id] = ProjectileType(id, asset, traits)
         }
     }
 

@@ -3,7 +3,9 @@ package me.artofluxis.game.game.scenes
 import me.artofluxis.game.handleException
 import korlibs.image.color.*
 import korlibs.korge.scene.*
+import korlibs.korge.ui.*
 import korlibs.korge.view.*
+import korlibs.math.geom.*
 import me.artofluxis.game.registries.*
 
 class LoadingScene(
@@ -12,19 +14,11 @@ class LoadingScene(
     override suspend fun SContainer.sceneMain() {
         try {
             val padding = 50.0
-            val barWidth = 800.0
+            val barWidth = 1100.0
             val barHeight = 50.0
 
             val loadingText = text("", textSize = 48.0, color = Colors.WHITE) {
                 xy(padding, padding)
-            }
-
-            val progressBarBg = solidRect(barWidth, barHeight, Colors.DARKGREY) {
-                xy(padding, padding + 60)
-            }
-
-            val progressBar = solidRect(0.0, barHeight, Colors.GREEN) {
-                xy(padding, padding + 60)
             }
 
             // list of registries in order of loading
@@ -41,18 +35,23 @@ class LoadingScene(
                 LawnRegistry
             )
 
+            val progressBar = uiProgressBar(
+                Size(barWidth, barHeight),
+                0.0, registriesToLoad.size
+            ) {
+                xy(padding, padding + 60)
+            }
+
+
             for ((index, registry) in registriesToLoad.withIndex()) {
                 loadingText.text = "Loading ${registry::class.simpleName}..."
                 registry.load()
-                val progress = (index + 1).toDouble() / registriesToLoad.size
-                progressBar.width = barWidth * progress
+                progressBar.current = (index + 1).toDouble()
             }
 
             onLoad()
         } catch (e: Exception) {
-            this.removeChildren()
-
-            handleException(e, this.stage!!)
+            handleException(e, "Encountered Exception while loading registries")
         }
     }
 }

@@ -6,11 +6,12 @@ import me.artofluxis.game.trait.*
 data class PlantType(
     val id: String,
     val name: String,
-    var sunCost: Int,
-    var refreshTime: Double,
-    var toughness: Double,
     val hitHitbox: Hitbox,
+    val sunCost: Int,
+    val refreshTime: Double,
     val spriteAsset: String,
     val packetAsset: String,
     val traits: HashSet<Trait>
-)
+) {
+    override fun toString() = "${this::class.simpleName}[$id]"
+}

@@ -1,8 +1,7 @@
 package me.artofluxis.game.registries
 
-import me.artofluxis.game.dataFolder
 import kotlinx.serialization.json.*
-import me.artofluxis.game.loadBitmap
+import me.artofluxis.game.*
 import me.artofluxis.game.game.types.*
 import java.io.*
 
@@ -16,7 +15,7 @@ data object LawnRegistry : Registry {
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
             val asset = value.jsonObject["asset"]!!.jsonPrimitive.content
-            loadBitmap(asset)
+            BitmapLoader.loadBitmap(asset)
             val sunSprite = SpriteRegistry.get(value.jsonObject["sunSprite"]!!.jsonPrimitive.content)
             val rows = value.jsonObject["rows"]!!.jsonPrimitive.int
             val columns = value.jsonObject["columns"]!!.jsonPrimitive.int
@@ -26,35 +25,27 @@ data object LawnRegistry : Registry {
             val lawnUpperLeftCorner = value.jsonObject["lawnUpperLeftCorner"]!!.jsonArray.let {
                 it[0].jsonPrimitive.int to it[1].jsonPrimitive.int
             }
-            val plantSize = value.jsonObject["plantSize"]!!.jsonPrimitive.float
-            val zombieSize = value.jsonObject["zombieSize"]!!.jsonPrimitive.float
+            val teamSizes = HashMap(value.jsonObject["teamSizes"]!!.jsonObject.map {
+                TeamRegistry.get(it.key) to it.value.jsonPrimitive.double
+            }.toMap())
+            val teamOffsets = HashMap(value.jsonObject["teamOffsets"]!!.jsonObject.map {
+                TeamRegistry.get(it.key) to it.value.jsonArray.let { array ->
+                    array[0].jsonPrimitive.double to array[1].jsonPrimitive.double
+                }
+            }.toMap())
 
-
-            val defaultTile = TileRegistry.get(value.jsonObject["defaultTile"]!!.jsonPrimitive.content)
             val tileKeys = value.jsonObject["tileKeys"]!!.jsonObject
             val tileSetArray = value.jsonObject["tileSet"]!!.jsonArray
-            val tileSet: HashMap<Pair<Int, Int>, TileType> =
-                HashMap<Pair<Int, Int>, TileType>().apply {
-                    tileSetArray.mapIndexed { y, row ->
-                        row.jsonPrimitive.content.forEachIndexed { x, char ->
-                            val tileName = (tileKeys[char.toString()] as JsonPrimitive).contentOrNull
-                            if (tileName != null) {
-                                put(Pair(x, y), TileRegistry.get(tileName))
-                            }
-                        }
-                    }
-                }
-            val fullTileSet: List<List<TileType>> =
+            val tileSet: List<List<TileType>> =
                 tileSetArray.map { row -> row.jsonPrimitive.content.map { char ->
-                    val tileName = (tileKeys[char.toString()] as JsonPrimitive).contentOrNull
-                    if (tileName == null) defaultTile else TileRegistry.get(tileName)
+                    val tileName = (tileKeys[char.toString()] as JsonPrimitive).content
+                    TileRegistry.get(tileName)
                 }}
 
             lawns[id] = LawnType(
                 id, asset, sunSprite, rows, columns,
                 tileSize, lawnUpperLeftCorner,
-                plantSize, zombieSize, defaultTile, tileSet,
-                fullTileSet.size, fullTileSet.map { it.size }
+                teamSizes, teamOffsets, tileSet
             )
         }
     }

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "commonPlantHitHitbox",
+    "width": 0.9,
+    "height": 0.9,
+    "xOffset": 0.0,
+    "yOffset": 0.0,
+    "center": "CENTER",
+    "affectOtherRows": false,
+    "debugColor": "#ff0000"
+  },
+  {
+    "id": "straightOneLaneDetectionHitbox",
+    "width": 1000.0,
+    "height": 0.5,
+    "xOffset": -0.1,
+    "yOffset": -0.4,
+    "center": "CENTER_LEFT",
+    "affectOtherRows": false,
+    "debugColor": "#ff00ff"
+  },
+  {
+    "id": "commonZombieHitHitbox",
+    "width": 0.7,
+    "height": 1.0,
+    "xOffset": 0.0,
+    "yOffset": 0.05,
+    "center": "BOTTOM",
+    "affectOtherRows": false,
+    "debugColor": "#ffff00"
+  },
+  {
+    "id": "commonZombieEatingHitbox",
+    "width": 0.6,
+    "height": 1.0,
+    "xOffset": -0.2,
+    "yOffset": 0.05,
+    "center": "BOTTOM",
+    "affectOtherRows": false,
+    "debugColor": "#00ffff"
+  },
+  {
+    "id": "commonProjectileHitbox",
+    "width": 0.2,
+    "height": 0.2,
+    "xOffset": 0.0,
+    "yOffset": 0.0,
+    "center": "CENTER",
+    "affectOtherRows": false,
+    "debugColor": "#0000ff"
+  }
+]

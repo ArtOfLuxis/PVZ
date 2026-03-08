@@ -1,5 +1,7 @@
 package me.artofluxis.game.trait.events.alive
 
-interface ObjectCreatedTraitListener {
+import me.artofluxis.game.trait.*
+
+interface ObjectCreatedTraitListener: TraitTrigger {
     fun onCreation()
 }

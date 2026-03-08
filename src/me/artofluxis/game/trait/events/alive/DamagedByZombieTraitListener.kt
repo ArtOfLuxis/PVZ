@@ -1,7 +1,8 @@
 package me.artofluxis.game.trait.events.alive
 
-import me.artofluxis.game.game.objects.logic.LawnZombie
+import me.artofluxis.game.game.objects.logic.*
+import me.artofluxis.game.trait.*
 
-interface DamagedByZombieTraitListener {
-    fun damagedByZombie(zombie: LawnZombie)
+interface DamagedByZombieTraitListener: TraitTrigger {
+    fun damagedByZombie(zombie: LawnZombie, damage: Double)
 }

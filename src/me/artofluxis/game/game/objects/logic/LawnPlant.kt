@@ -11,6 +11,7 @@ import me.artofluxis.game.game.objects.*
 import me.artofluxis.game.game.scenes.*
 import me.artofluxis.game.trait.*
 
+@Suppress("MemberVisibilityCanBePrivate")
 class LawnPlant(
     override var pos: Position,
     override val row: Int,
@@ -19,11 +20,12 @@ class LawnPlant(
     override val scene: InGameScene,
     override var image: Image?,
     override val traits: HashSet<TraitInstance>,
-    override val toughness: Double,
     override val effects: HashMap<Effect, Timer>,
     val type: PlantType,
-): AliveLawnObject {
+): AliveLawnObject(hitHitbox) {
     override val highlightFilter = HighlightFilter(mutableListOf())
 
     override fun asset() = type.spriteAsset
+
+    override fun toString(): String = "${this::class.simpleName}[${type.id}]"
 }

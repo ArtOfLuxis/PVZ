@@ -6,4 +6,6 @@ data class TileType(
     val id: String,
     val asset: String?,
     val traits: HashSet<Trait>
-)
+) {
+    override fun toString() = "${this::class.simpleName}[$id]"
+}

@@ -1,9 +1,7 @@
 package me.artofluxis.game.registries
 
-import me.artofluxis.game.dataFolder
 import kotlinx.serialization.json.*
-import me.artofluxis.game.loadBitmap
-import me.artofluxis.game.resourcesFolder
+import me.artofluxis.game.*
 import java.io.*
 
 data object GlobalRegistry : Registry {
@@ -31,8 +29,8 @@ data object GlobalRegistry : Registry {
             it[0].jsonPrimitive.int to it[1].jsonPrimitive.int
         }
         playBackgroundAsset = json["playBackgroundAsset"]!!.jsonPrimitive.content
-        loadBitmap(playBackgroundAsset!!)
+        BitmapLoader.loadBitmap(playBackgroundAsset!!)
         settingsBackgroundAsset = json["settingsBackgroundAsset"]!!.jsonPrimitive.content
-        loadBitmap(settingsBackgroundAsset!!)
+        BitmapLoader.loadBitmap(settingsBackgroundAsset!!)
     }
 }

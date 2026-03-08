@@ -26,15 +26,15 @@ data object EffectRegistry : Registry {
 
             val effects = hashSetOf<EffectType>()
             value.jsonObject["effects"]!!.jsonArray.forEach { obj ->
-                val effectType = EffectModifierType.valueOf(
-                    obj.jsonObject["type"]!!.jsonPrimitive.content.uppercase()
+                val effectType = EffectModifierType.get(
+                    obj.jsonObject["type"]!!.jsonPrimitive.content.lowercase()
                 )
                 val effectValue = obj.jsonObject["value"]!!.jsonPrimitive.double
-                val effectOperation = OperationType.valueOf(
-                    obj.jsonObject["operation"]!!.jsonPrimitive.content
+                val effectOperation = OperationType.get(
+                    obj.jsonObject["operation"]!!.jsonPrimitive.content.lowercase()
                 )
-                val effectOperationOrder = OperationOrder.valueOf(
-                    obj.jsonObject["order"]!!.jsonPrimitive.content
+                val effectOperationOrder = OperationOrder.get(
+                    obj.jsonObject["order"]!!.jsonPrimitive.content.lowercase()
                 )
                 val effect = EffectType(
                     effectType, effectValue, effectOperation,

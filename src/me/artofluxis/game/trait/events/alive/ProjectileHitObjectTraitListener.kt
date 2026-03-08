@@ -1,7 +1,8 @@
 package me.artofluxis.game.trait.events.alive
 
 import me.artofluxis.game.game.objects.LawnObject
+import me.artofluxis.game.trait.*
 
-interface ProjectileHitObjectTraitListener {
-    fun projectileHitObject(obj: LawnObject)
+interface ProjectileHitObjectTraitListener: TraitTrigger {
+    fun projectileHitObject(obj: LawnObject, damage: Double)
 }

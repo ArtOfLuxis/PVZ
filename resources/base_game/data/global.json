@@ -1,0 +1,8 @@
+{
+  "iconAsset": "textures/icon.png",
+  "showDebugHitboxes": true,
+  "windowSize": [1280, 768],
+  "debugHitboxUpdateInterval": 0.06,
+  "playBackgroundAsset": "textures/backgrounds/play.png",
+  "settingsBackgroundAsset": "textures/backgrounds/settings.png"
+}

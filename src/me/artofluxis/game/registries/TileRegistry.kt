@@ -1,8 +1,7 @@
 package me.artofluxis.game.registries
 
-import me.artofluxis.game.dataFolder
 import kotlinx.serialization.json.*
-import me.artofluxis.game.loadBitmap
+import me.artofluxis.game.*
 import me.artofluxis.game.game.types.*
 import me.artofluxis.game.trait.*
 import java.io.*
@@ -17,7 +16,7 @@ data object TileRegistry : Registry {
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
             val asset = value.jsonObject["asset"]!!.jsonPrimitive.contentOrNull
-            if (asset != null) loadBitmap(asset)
+            if (asset != null) BitmapLoader.loadBitmap(asset)
 
             val traits = hashSetOf<Trait>()
             value.jsonObject["traits"]!!.jsonArray.forEach { obj ->
@@ -25,7 +24,7 @@ data object TileRegistry : Registry {
                 val trait = Trait.from(traitID, obj.jsonObject)
 
                 if (trait.traitType != TraitType.TILE)
-                    error("Non-tile trait in a plant definition\n$obj")
+                    error("Non-tile trait in a tile definition $obj")
                 traits.add(trait)
             }
 

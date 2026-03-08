@@ -1,8 +1,7 @@
 package me.artofluxis.game.registries
 
-import me.artofluxis.game.dataFolder
 import kotlinx.serialization.json.*
-import me.artofluxis.game.loadBitmap
+import me.artofluxis.game.*
 import java.io.*
 
 data object SpriteRegistry : Registry {
@@ -15,7 +14,7 @@ data object SpriteRegistry : Registry {
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
             val asset = value.jsonObject["asset"]!!.jsonPrimitive.content
-            loadBitmap(asset)
+            BitmapLoader.loadBitmap(asset)
 
             sprites[id] = asset
         }

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "pea",
+    "asset": "textures/projectiles/pea.png",
+    "traits": [
+      {
+        "id": "CollisionProjectileLogic",
+        "detectionHitbox": "commonProjectileHitbox",
+        "damage": 20.0
+      },
+      {
+        "id": "FlammableProjectile",
+        "newProjectile": "fire_pea"
+      }
+    ]
+  },
+  {
+    "id": "fire_pea",
+    "asset": "textures/projectiles/fire_pea.png",
+    "traits": [
+      {
+        "id": "CollisionProjectileLogic",
+        "detectionHitbox": "commonProjectileHitbox",
+        "damage": 40.0
+      },
+      {
+        "id": "EffectRemoverProjectile",
+        "effect": "chill"
+      }
+    ]
+  },
+  {
+    "id": "snow_pea",
+    "asset": "textures/projectiles/snow_pea.png",
+    "traits": [
+      {
+        "id": "CollisionProjectileLogic",
+        "detectionHitbox": "commonProjectileHitbox",
+        "damage": 20.0
+      },
+      {
+        "id": "FlammableProjectile",
+        "newProjectile": "pea"
+      },
+      {
+        "id": "EffectApplierProjectile",
+        "effect": "chill",
+        "effectTime": 5.0
+      }
+    ]
+  }
+]

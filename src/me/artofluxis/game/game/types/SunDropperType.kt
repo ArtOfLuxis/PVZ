@@ -16,4 +16,6 @@ data class SunDropperType(
             1 to 0.25
         )
     }
+
+    override fun toString() = "${this::class.simpleName}[$id]"
 }

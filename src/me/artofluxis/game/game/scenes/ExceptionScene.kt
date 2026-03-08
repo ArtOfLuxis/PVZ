@@ -5,7 +5,10 @@ import korlibs.korge.scene.*
 import korlibs.korge.view.*
 import korlibs.math.geom.vector.*
 
-class ExceptionScene(private val exception: Exception) : Scene() {
+class ExceptionScene(
+    private val exception: Throwable,
+    private val title: String
+) : Scene() {
     override suspend fun SContainer.sceneMain() {
         val padding = 20.0
         val crossSize = 30.0
@@ -20,7 +23,7 @@ class ExceptionScene(private val exception: Exception) : Scene() {
         }
         cross.xy(padding, padding)
 
-        text("Encountered Exception", textSize = 24.0, color = Colors.WHITE) {
+        text(title, textSize = 24.0, color = Colors.WHITE) {
             this.xy(padding + crossSize + 10, padding)
         }
 

@@ -1,6 +1,7 @@
 package me.artofluxis.game.game.types
 
 import me.artofluxis.game.Position
+import me.artofluxis.game.game.objects.*
 
 class LawnType(
     val id: String,
@@ -10,19 +11,16 @@ class LawnType(
     val columns: Int,
     val tileSize: Pair<Int, Int>,
     val lawnUpperLeftCorner: Pair<Int, Int>,
-    val plantSize: Float,
-    val zombieSize: Float,
-    val defaultTile: TileType,
-    val tileSet: HashMap<Pair<Int, Int>, TileType>,
-    tileSetRows: Int,
-    tileSetColumns: List<Int>
+    val teamSizes: HashMap<ObjectTeam, Double>,
+    val teamOffsets: HashMap<ObjectTeam, Pair<Double, Double>>,
+    val tileSet: List<List<TileType>>,
 ) {
     init {
-        if (tileSetRows != rows) throw IllegalArgumentException(
+        if (tileSet.size != rows) throw IllegalArgumentException(
                 "Tileset for lawn '$id' has ${tileSet.size} rows, but the lawn requires $rows rows"
         )
-        tileSetColumns.forEachIndexed { index, columnsInRow ->
-            if (columnsInRow != columns) throw IllegalArgumentException(
+        tileSet.forEachIndexed { index, columnsInRow ->
+            if (columnsInRow.size != columns) throw IllegalArgumentException(
                 "Row #${index + 1} in the tileset for lawn '$id' has $columnsInRow columns, but the lawn requires $columns columns"
             )
         }
@@ -34,4 +32,6 @@ class LawnType(
             (y - 0.5) * tileSize.second.toDouble() + lawnUpperLeftCorner.second
         )
     }
+
+    override fun toString() = "${this::class.simpleName}[$id]"
 }

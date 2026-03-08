@@ -17,16 +17,21 @@ import kotlin.collections.contains
 import kotlin.collections.forEach
 import kotlin.collections.set
 
-val bitmapCache = HashMap<String, Bitmap>()
+object BitmapLoader {
+    val bitmapCache = HashMap<String, Bitmap>()
 
-fun getBitmap(assetPath: String): Bitmap = bitmapCache[assetPath]
-    ?: error("Missing preloaded bitmap for $assetPath")
-suspend fun loadBitmap(assetPath: String) {
-    if (assetPath !in bitmapCache) {
-        bitmapCache[assetPath] =
-            localVfs(resourcesFolder.absolutePath)[assetPath].readBitmap()
+    fun getBitmap(assetPath: String): Bitmap = bitmapCache[assetPath]
+        ?: error("Missing preloaded bitmap for $assetPath")
+
+    suspend fun loadBitmap(assetPath: String) {
+        if (assetPath !in bitmapCache) {
+            bitmapCache[assetPath] =
+                localVfs(resourcesFolder.absolutePath)[assetPath].readBitmap()
+        }
     }
 }
+
+
 
 data class Position(val x: Double, val y: Double)
 
@@ -109,12 +114,35 @@ class Timer(
     }
 }
 
-suspend fun handleException(e: Exception, stage: Stage) {
-    stage.gameWindow.setSize(1200, 600)
-    stage.gameWindow.title = "Encountered Exception"
+suspend fun handleException(e: Throwable, title: String) {
+    val stage = originalSceneContainer.stage!!
+
+    stage.removeChildren()
+    stage.gameWindow.setSize(1800, 900)
+    stage.gameWindow.title = title
 
     val sceneContainer = stage.sceneContainer()
-    sceneContainer.changeTo { ExceptionScene(e) }
+    sceneContainer.changeTo { ExceptionScene(e, title) }
 
     e.printStackTrace()
+    saveData.save()
+}
+
+fun Bitmap32.drawRectOutline(x: Int, y: Int, w: Int, h: Int, color: RGBA) {
+    val x2 = x + w
+    val y2 = y + h
+
+    for (px in x..x2) {
+        if (px in 0 until width) {
+            if (y in 0 until height) this[px, y] = color
+            if (y2 in 0 until height) this[px, y2] = color
+        }
+    }
+
+    for (py in y..y2) {
+        if (py in 0 until height) {
+            if (x in 0 until width) this[x, py] = color
+            if (x2 in 0 until width) this[x2, py] = color
+        }
+    }
 }

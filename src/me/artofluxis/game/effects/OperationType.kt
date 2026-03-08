@@ -1,7 +1,20 @@
 package me.artofluxis.game.effects
 
-enum class OperationType(
+class OperationType(
+    val id: String,
     val operation: (Double, Double) -> Double
 ) {
-    ADDITION({ f, s -> f + s }), MULTIPLICATION({ f, s -> f * s })
+    companion object {
+        internal val registry = hashMapOf<String, OperationType>()
+
+        fun register(id: String, operation: (Double, Double) -> Double) {
+            val lowerId = id.lowercase()
+            require(lowerId !in registry) {
+                "Operation type $lowerId is already registered"
+            }
+            registry[lowerId] = OperationType(lowerId, operation)
+        }
+
+        fun get(id: String) = registry[id.lowercase()]  ?: error("Unknown operation type: $id")
+    }
 }

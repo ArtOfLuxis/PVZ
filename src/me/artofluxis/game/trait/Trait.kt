@@ -1,58 +1,77 @@
 package me.artofluxis.game.trait
 
-import kotlinx.serialization.*
+import kotlinx.coroutines.*
 import kotlinx.serialization.json.*
+import me.artofluxis.game.*
 import me.artofluxis.game.game.objects.LawnObject
+import me.artofluxis.game.mod.*
+import java.lang.ref.*
 
 open class Trait(
-    private val fields: Map<String, KSerializer<*>>,
-    val traitType: TraitType
+    private val fields: Map<String, LazyDeserializer<*>>,
+    val traitType: TraitType,
+    jsonObject: JsonObject
 ) {
-    open val values = hashMapOf<String, Any>()
+    private val values = deserialize(jsonObject)
+    open val cachedValues = hashMapOf<String, Any>()
 
     @Suppress("UNCHECKED_CAST")
     protected fun <T> get(key: String): T {
-        return values[key] as T
+        val cached = cachedValues[key]
+        if (cached != null) return cached as T
+
+        val value = values[key]?.invoke()
+            ?: error("Value '$key' not found")
+
+        // weak reference
+        cachedValues[key] = value
+        return value as T
     }
 
     open fun createInstance(parent: LawnObject): TraitInstance {
         error("Trait does not implement instance creation")
     }
 
-    fun deserialize(json: JsonObject, jsonFormat: Json = Json): HashMap<String, Any> {
-        if (!json.containsKey("id")) error("Missing required key: id")
-
-        val result = HashMap<String, Any>()
+    fun deserialize(json: JsonObject, jsonFormat: Json = Json): HashMap<String, () -> Any?> {
+        val result = HashMap<String, () -> Any?>()
 
         for ((key, serializer) in fields) {
             val element = json[key] ?: error("Missing required key: $key")
-            val value = jsonFormat.decodeFromJsonElement(serializer, element)!!
+            val value = jsonFormat.decodeFromJsonElement(serializer, element)
             result[key] = value
         }
 
-        result["id"] = json["id"]!!.jsonPrimitive.content
         return result
     }
 
     companion object {
-        private val registry = HashMap<String, (JsonObject) -> Trait>()
+        internal val registry = HashMap<String, (JsonObject) -> Trait>()
 
         fun register(name: String, constructor: (JsonObject) -> Trait) {
-            require(name !in registry) {
+            val lowerName = name.lowercase()
+            require(lowerName !in registry) {
                 "Trait $name is already registered"
             }
-            registry[name] = constructor
+            registry[lowerName] = constructor
         }
 
         fun from(name: String, json: JsonObject): Trait {
-            val factory = registry[name] ?: error("Unknown trait: $name")
+            val lowerName = name.lowercase()
+            val factory = registry[lowerName] ?: error("Unknown trait: $name")
+
+            try {
+                factory(json)
+            } catch (e: Exception) {
+                originalSceneContainer.launch {
+                    handleException(e, "Encountered Exception when initializing trait $name")
+                }
+            }
+
             return factory(json)
         }
     }
 
     override fun toString() = """
-        ${this::class.simpleName}[
-            ${values.entries.joinToString("\n") { "\t${it.key}=${it.value}" }}
-        ]
+        ${this::class.simpleName}[${cachedValues.entries.joinToString(", ") { "\t${it.key}=${it.value}" }}]
     """.trimIndent()
 }

@@ -1,0 +1,31 @@
+[
+  {
+    "id": "modern",
+    "asset": "textures/lawns/modern.png",
+    "sunDropper": "normal",
+    "sunSprite": "sun",
+    "rows": 5,
+    "columns": 9,
+    "tileSize": [82, 97],
+    "lawnUpperLeftCorner": [257, 204],
+    "teamSizes": {
+      "plants": 0.6,
+      "zombies": 0.6
+    },
+    "teamOffsets": {
+      "plants": [0.0, -0.25],
+      "zombies": [0.0, 0.25]
+    },
+    "tileKeys": {
+      "a": "ground",
+      "b": "ice"
+    },
+    "tileSet": [
+      "aaaaaaaba",
+      "aaaaaaaaa",
+      "aaaaaaaaa",
+      "aaaaaaaaa",
+      "aaaaaaaaa"
+    ]
+  }
+]
