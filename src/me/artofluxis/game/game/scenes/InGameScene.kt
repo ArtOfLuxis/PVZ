@@ -11,6 +11,7 @@ import korlibs.math.geom.*
 import korlibs.time.*
 import kotlinx.coroutines.*
 import me.artofluxis.game.*
+import me.artofluxis.game.animation.*
 import me.artofluxis.game.game.hitbox.*
 import me.artofluxis.game.game.objects.*
 import me.artofluxis.game.game.objects.logic.*
@@ -53,16 +54,29 @@ class InGameScene(
 
         lawnType.tileSet.forEachIndexed { row, rows ->
             rows.forEachIndexed { column, tile ->
-                if (tile.asset != null && tile.traits.isNotEmpty())
+                if (tile.animationPack != null && tile.traits.isNotEmpty())
                     putTileByType(column + 1, row + 1, tile)
             }
         }
+
+        this@InGameScene.putPlantByType(
+            1, 2,
+            PlantRegistry.get("peashooter"),
+            TeamRegistry.get("plants")
+        )
+
+        this@InGameScene.putPlantByType(
+            1, 3,
+            PlantRegistry.get("peashooter"),
+            TeamRegistry.get("plants")
+        )
 
         this@InGameScene.putPlantByType(
             1, 4,
             PlantRegistry.get("peashooter"),
             TeamRegistry.get("plants")
         )
+
 
         this@InGameScene.putZombieByType(
             9, 2,
@@ -140,11 +154,9 @@ class InGameScene(
                         debugHitboxes.clear()
 
                         for (obj in lawnObjects) {
-                            if (obj is DamageableLawnObject) {
-                                val hitbox = obj.hitHitbox()
-                                if (hitbox != null)
-                                    debugHitboxes.add(hitbox to obj)
-                            }
+                            val hitbox = obj.hitHitbox()
+                            if (hitbox != null)
+                                debugHitboxes.add(hitbox to obj)
 
                             if (obj is TickableLawnObject) {
                                 for (traitInstance in obj.getTraitsSnapshot()) {
@@ -196,59 +208,76 @@ class InGameScene(
     }
 
     fun putPlant(obj: LawnPlant) =
-        sContainer.putObject(obj, 0.5, 0.5)
+        sContainer.putObject(obj, 0.5, 0.5, obj.type.scale)
     fun putZombie(obj: LawnZombie) =
-        sContainer.putObject(obj, 0.5, 1.0)
+        sContainer.putObject(obj, 0.5, 1.0, obj.type.scale)
     fun putProjectile(obj: LawnProjectile) =
-        sContainer.putObject(obj, 0.5, 0.5)
+        sContainer.putObject(obj, 0.5, 0.5, 1.0)
     fun putTile(obj: LawnTile) =
-        sContainer.putObject(obj, 0.5, 0.5)
+        sContainer.putObject(obj, 0.5, 0.5, 1.0)
 
-    fun putPlantByType(column: Int, row: Int, plantType: PlantType, team: ObjectTeam): LawnPlant {
+    fun putPlantByType(
+        column: Int,
+        row: Int,
+        plantType: PlantType,
+        team: ObjectTeam?
+    ): LawnPlant {
+        val animPlayer = AnimationPlayer(plantType.animationPack)
+
         val plant = LawnPlant(
             lawnType.getTileCenter(column, row),
             row,
             team,
             this,
             null,
+            animPlayer,
             hashSetOf(),
             hashMapOf(),
             plantType
         )
+
         plantType.traits.forEach { plant.addTrait(it.createInstance(plant)) }
         putPlant(plant)
 
         return plant
     }
 
-    fun putZombieByType(column: Int, row: Int, zombieType: ZombieType, team: ObjectTeam): LawnZombie {
+    fun putZombieByType(column: Int, row: Int, zombieType: ZombieType, team: ObjectTeam?): LawnZombie {
+        val animPlayer = AnimationPlayer(zombieType.animationPack)
+
         val zombie = LawnZombie(
             lawnType.getTileCenter(column, row),
             row,
             team,
             this,
             null,
+            animPlayer,
             hashSetOf(),
             hashMapOf(),
             zombieType
         )
+
         zombieType.traits.forEach { zombie.addTrait(it.createInstance(zombie)) }
         putZombie(zombie)
 
         return zombie
     }
 
-    fun putProjectileByType(position: Position, row: Int, projectileType: ProjectileType, team: ObjectTeam, shooter: LawnObject): LawnProjectile {
+    fun putProjectileByType(position: Position, row: Int, projectileType: ProjectileType, team: ObjectTeam?, shooter: LawnObject): LawnProjectile {
+        val animPlayer = AnimationPlayer(projectileType.animationPack)
+
         val projectile = LawnProjectile(
             position,
             row,
             team,
             this,
             null,
+            animPlayer,
             hashSetOf(),
             projectileType,
             shooter
         )
+
         projectileType.traits.forEach { projectile.addTrait(it.createInstance(projectile)) }
         putProjectile(projectile)
 
@@ -256,40 +285,53 @@ class InGameScene(
     }
 
     fun putTileByType(column: Int, row: Int, tileType: TileType): LawnTile {
+        val animPlayer =
+            if (tileType.animationPack == null) null
+            else AnimationPlayer(tileType.animationPack)
+
         val tile = LawnTile(
             lawnType.getTileCenter(column, row),
             row,
             this,
             null,
+            animPlayer,
             hashSetOf(),
             tileType
         )
+
         tileType.traits.forEach { tile.addTrait(it.createInstance(tile)) }
         putTile(tile)
 
         return tile
     }
 
-    private fun SContainer.putObject(obj: LawnObject, anchorX: Double, anchorY: Double) {
-        val position = obj.pos
+    private fun SContainer.putObject(obj: LawnObject, anchorX: Double, anchorY: Double, scale: Double) {
+        val totalScale = obj.scale() * scale
+
+        obj.pos = Position(
+            obj.pos.x + lawnType.tileSize.first  * obj.offset().first  * totalScale,
+            obj.pos.y + lawnType.tileSize.second * obj.offset().second * totalScale
+        )
+        val pos = obj.pos
+
         pendingObjects.add(obj)
 
-        val asset = obj.asset()
-        if (asset != null) obj.setNewImage(image(BitmapLoader.getBitmap(asset)) {
-            anchor(anchorX, anchorY)
-            scale(obj.scale())
-            if (obj is LawnTile) {
-                println(obj.team)
-                println(obj.offset())
-                println(position.y + lawnType.tileSize.second * obj.offset().second * obj.scale())
-            }
-            position(
-                position.x + lawnType.tileSize.first  * obj.offset().first  * obj.scale(),
-                position.y + lawnType.tileSize.second * obj.offset().second * obj.scale()
-            )
-            smoothing = false
-            zIndex = 10.0
-        })
+        obj.animationPlayer?.parent = obj
+
+        val frame = obj.animationPlayer?.frame()
+
+
+        if (frame != null) {
+            if (obj is LawnZombie) println(obj.offset())
+            obj.setNewImage(image(frame) {
+                anchor(anchorX, anchorY)
+                scale(totalScale)
+
+                position(pos.x, pos.y)
+                smoothing = false
+                zIndex = 10.0
+            })
+        }
 
         if (obj is ObjectCreatedTraitListener) obj.onCreation()
     }
@@ -305,7 +347,6 @@ class InGameScene(
 
         obj.image?.removeFromParent()
         obj.image = null
-
 
         pendingToDeleteObjects.add(obj)
     }

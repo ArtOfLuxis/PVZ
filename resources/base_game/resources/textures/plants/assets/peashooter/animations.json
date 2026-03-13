@@ -1,0 +1,14 @@
+{
+  "animations": {
+    "idle": {
+      "loop": true,
+      "fps": 30,
+      "extraFrameData": {}
+    },
+    "shoot": {
+      "loop": false,
+      "fps": 30,
+      "extraFrameData": { "19": "shoot" }
+    }
+  }
+}

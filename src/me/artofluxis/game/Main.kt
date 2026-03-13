@@ -1,6 +1,7 @@
 package me.artofluxis.game
 
 import korlibs.image.color.*
+import korlibs.io.file.*
 import korlibs.io.file.std.*
 import korlibs.korge.*
 import korlibs.korge.scene.*
@@ -70,6 +71,7 @@ suspend fun main() {
     val baseGameFolder = modsFolder["base_game"]
 
     if (!baseGameFolder.exists() || true) { // --------------------------
+        baseGameFolder.deleteRecursively()
         println("Copying default base game mod folder...")
         baseGameFolder.mkdirs()
         resourcesVfs["base_game"].copyToRecursively(baseGameFolder)

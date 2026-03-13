@@ -1,12 +1,13 @@
 package me.artofluxis.game.game.objects
 
-import me.artofluxis.game.HighlightFilter
-import me.artofluxis.game.Position
+import korlibs.image.bitmap.*
 import korlibs.korge.view.*
 import korlibs.korge.view.filter.*
+import korlibs.math.geom.slice.*
+import me.artofluxis.game.*
+import me.artofluxis.game.animation.*
 import me.artofluxis.game.game.hitbox.*
 import me.artofluxis.game.game.scenes.*
-import java.util.concurrent.locks.Condition
 
 interface LawnObject {
     var pos: Position
@@ -14,13 +15,18 @@ interface LawnObject {
     var team: ObjectTeam?
     val scene: InGameScene
     var image: Image?
+    val animationPlayer: AnimationPlayer?
     val highlightFilter: HighlightFilter
-
-    fun asset(): String?
 
     fun setNewImage(newImage: Image) {
         this.image = newImage
         this.image!!.filter = highlightFilter
+    }
+
+    fun updateImage(newBitmap: RectSlice<Bitmap>) {
+        this.image!!.apply {
+            bitmap = newBitmap
+        }
     }
 
     fun scale() = scene.lawnType.teamSizes[team]
@@ -47,6 +53,7 @@ interface LawnObject {
             "Tried to find intersecting objects from an object without a hitHitbox"
         )).isIntersecting(this, otherObj, this.scene.lawnType, condition)
     }
+
     fun isIntersecting(
         hitbox: Hitbox,
         otherObj: LawnObject,

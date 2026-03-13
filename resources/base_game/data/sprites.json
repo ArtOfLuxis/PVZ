@@ -1,6 +1,6 @@
 [
   {
     "id": "sun",
-    "asset": "textures/sprites/sun.png"
+    "animationPack": "textures/sprites/sun"
   }
 ]

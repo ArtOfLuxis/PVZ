@@ -1,12 +1,13 @@
 package me.artofluxis.game.game.types
 
 import me.artofluxis.game.Position
+import me.artofluxis.game.animation.*
 import me.artofluxis.game.game.objects.*
 
 class LawnType(
     val id: String,
     val asset: String,
-    val sunSprite: String,
+    val sunSprite: AnimationPack,
     val rows: Int,
     val columns: Int,
     val tileSize: Pair<Int, Int>,

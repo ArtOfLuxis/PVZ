@@ -2,6 +2,7 @@ package me.artofluxis.game.game.objects.logic
 
 import korlibs.korge.view.*
 import me.artofluxis.game.*
+import me.artofluxis.game.animation.*
 import me.artofluxis.game.game.hitbox.*
 import me.artofluxis.game.game.objects.*
 import me.artofluxis.game.game.scenes.*
@@ -14,13 +15,12 @@ class LawnTile(
     override val row: Int,
     override val scene: InGameScene,
     override var image: Image?,
+    override val animationPlayer: AnimationPlayer?,
     override val traits: HashSet<TraitInstance>,
     val type: TileType,
 ): TickableLawnObject() {
     override var team: ObjectTeam? = null
     override val highlightFilter = HighlightFilter(mutableListOf())
-
-    override fun asset() = type.asset
 
     override fun hitHitbox() = null
 

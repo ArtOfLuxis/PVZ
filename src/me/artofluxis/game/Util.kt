@@ -1,5 +1,6 @@
 package me.artofluxis.game
 
+import korlibs.datastructure.*
 import korlibs.image.bitmap.*
 import korlibs.image.color.*
 import korlibs.image.format.*
@@ -10,7 +11,10 @@ import korlibs.korge.view.*
 import korlibs.korge.view.filter.*
 import korlibs.math.geom.*
 import korlibs.time.*
+import kotlinx.serialization.json.*
+import me.artofluxis.game.animation.*
 import me.artofluxis.game.game.scenes.*
+import java.io.File
 import kotlin.collections.HashMap
 import kotlin.collections.MutableList
 import kotlin.collections.contains
@@ -23,11 +27,13 @@ object BitmapLoader {
     fun getBitmap(assetPath: String): Bitmap = bitmapCache[assetPath]
         ?: error("Missing preloaded bitmap for $assetPath")
 
-    suspend fun loadBitmap(assetPath: String) {
+    suspend fun loadBitmap(assetPath: String): Bitmap {
         if (assetPath !in bitmapCache) {
             bitmapCache[assetPath] =
                 localVfs(resourcesFolder.absolutePath)[assetPath].readBitmap()
         }
+
+        return bitmapCache[assetPath]!!
     }
 }
 
@@ -129,20 +135,85 @@ suspend fun handleException(e: Throwable, title: String) {
 }
 
 fun Bitmap32.drawRectOutline(x: Int, y: Int, w: Int, h: Int, color: RGBA) {
-    val x2 = x + w
-    val y2 = y + h
+    val x0 = x.coerceAtLeast(0)
+    val y0 = y.coerceAtLeast(0)
+    val x1 = (x + w - 1).coerceAtMost(width - 1)
+    val y1 = (y + h - 1).coerceAtMost(height - 1)
 
-    for (px in x..x2) {
-        if (px in 0 until width) {
-            if (y in 0 until height) this[px, y] = color
-            if (y2 in 0 until height) this[px, y2] = color
-        }
+    if (x0 > x1 || y0 > y1) return
+
+    for (px in x0..x1) {
+        this[px, y0] = color
+        if (y0 != y1) this[px, y1] = color
     }
 
-    for (py in y..y2) {
-        if (py in 0 until height) {
-            if (x in 0 until width) this[x, py] = color
-            if (x2 in 0 until width) this[x2, py] = color
+    if (y1 - y0 >= 2) {
+        for (py in (y0 + 1) until y1) {
+            this[x0, py] = color
+            if (x0 != x1) this[x1, py] = color
         }
     }
+}
+
+suspend fun animationPackFromPath(
+    animationPackPath: String
+): AnimationPack {
+    val animationPackFolder = File("$resourcesFolder/$animationPackPath")
+
+    if (!animationPackFolder.exists()) {
+        val assetFile = File("$resourcesFolder/$animationPackPath.png")
+        if (assetFile.exists()) {
+            val bmp = BitmapLoader.loadBitmap("$animationPackPath.png")
+            val single = AnimationData(listOf(bmp.slice()), 999.0, true, hashMapOf())
+            return AnimationPack(linkedMapOf("normal" to single))
+        }
+        error("Animation pack folder not found: $animationPackPath")
+    }
+
+    // find animations.json
+    val animationsJsonFile = File(animationPackFolder, "animations.json")
+    require(animationsJsonFile.exists()) { "Missing animations.json in $animationPackPath" }
+
+    val animationsRoot = Json.parseToJsonElement(animationsJsonFile.readText()).jsonObject
+    val animationsObj = animationsRoot["animations"]?.jsonObject
+        ?: error("animations.json missing 'animations' object in $animationPackPath")
+
+    val animations = LinkedHashMap<String, AnimationData>()
+
+    for ((animName, animJe) in animationsObj) {
+        val animObj = animJe.jsonObject
+
+        val loop = animObj["loop"]!!.jsonPrimitive.boolean
+
+        val fps = animObj["fps"]!!.jsonPrimitive.double
+
+        val extraFrameData: HashMap<Int, String> = HashMap(animObj["extraFrameData"]!!.jsonObject
+            .mapNotNull { (k, v) ->
+                k.toIntOrNull()?.let { it to v.jsonPrimitive.content }
+            }.toMap())
+
+        val sheetPath = "$animationPackPath/$animName/${animName}.png"
+        println(sheetPath)
+        require(File(resourcesFolder, sheetPath).exists()) { "No sprite sheet found for animation $animName" }
+
+        val jsonFile = File(resourcesFolder, "$animationPackPath/$animName/${animName}.json")
+        require(jsonFile.exists()) { "No json data found for animation $animName" }
+
+        val sheetBitmap = BitmapLoader.loadBitmap(sheetPath)
+        val jsonText = jsonFile.readText()
+
+        val animData = AnimationData.fromSpriteSheetJson(
+            sheet = sheetBitmap,
+            jsonText = jsonText,
+            loop = loop,
+            fps = fps,
+            extraFrameData = extraFrameData
+        ) { src, x, y, w, h ->
+            src.sliceWithSize(x, y, w, h)
+        }
+
+        animations[animName] = animData
+    }
+
+    return AnimationPack(animations)
 }

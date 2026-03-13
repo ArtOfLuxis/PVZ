@@ -5,9 +5,11 @@
     "hitHitbox": "commonPlantHitHitbox",
     "sunCost": 100,
     "refreshTime": 5.0,
-    "sprite": "textures/plants/sprites/peashooter.png",
+    "imageScale": 0.6,
+    "animationPack": "textures/plants/assets/peashooter",
     "spritePacket": "textures/plants/packets/peashooter.png",
     "traits": [
+      { "id": "GenericAnimationTicker" },
       { "id": "EffectPlantLogic" },
       {
         "id": "ToughnessPlantLogic",
@@ -16,7 +18,7 @@
       {
         "id": "StraightShooterPlant",
         "projectile": "pea",
-        "projectilePositionOffset": [0.25, -0.4],
+        "projectilePositionOffset": [0.35, -0.15],
         "interval": 1.35,
         "additionalInterval": 0.15,
         "detectionHitbox": "straightOneLaneDetectionHitbox",

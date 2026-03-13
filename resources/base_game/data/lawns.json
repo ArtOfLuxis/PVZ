@@ -14,7 +14,7 @@
     },
     "teamOffsets": {
       "plants": [0.0, -0.25],
-      "zombies": [0.0, 0.25]
+      "zombies": [0.0, 0.1]
     },
     "tileKeys": {
       "a": "ground",

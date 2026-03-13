@@ -1,5 +1,6 @@
 package me.artofluxis.game.game.types
 
+import me.artofluxis.game.animation.*
 import me.artofluxis.game.game.hitbox.*
 import me.artofluxis.game.trait.*
 
@@ -9,7 +10,8 @@ data class PlantType(
     val hitHitbox: Hitbox,
     val sunCost: Int,
     val refreshTime: Double,
-    val spriteAsset: String,
+    val scale: Double,
+    val animationPack: AnimationPack,
     val packetAsset: String,
     val traits: HashSet<Trait>
 ) {

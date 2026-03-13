@@ -5,6 +5,7 @@ import me.artofluxis.game.game.objects.LawnObject
 import me.artofluxis.game.game.objects.ObjectTeam
 import me.artofluxis.game.game.objects.TickableLawnObject
 import korlibs.korge.view.*
+import me.artofluxis.game.animation.*
 import me.artofluxis.game.game.hitbox.*
 import me.artofluxis.game.game.scenes.*
 import me.artofluxis.game.game.types.*
@@ -18,12 +19,13 @@ class LawnProjectile(
     override var team: ObjectTeam?,
     override val scene: InGameScene,
     override var image: Image?,
+    override val animationPlayer: AnimationPlayer,
     override val traits: HashSet<TraitInstance>,
     val type: ProjectileType,
     val parentShooter: LawnObject
 ): TickableLawnObject() {
     override val highlightFilter = parentShooter.highlightFilter
-    override fun asset() = type.asset
+
     override fun hitHitbox() = type.hitHitbox
 
     fun projectileHitObject(obj: LawnObject, damage: Double) {

@@ -3,8 +3,10 @@
     "id": "modern_basic",
     "name": "Basic Modern",
     "hitHitbox": "commonZombieHitHitbox",
-    "asset": "textures/zombies/modern_basic.png",
+    "imageScale": 1.0,
+    "animationPack": "textures/zombies/modern_basic",
     "traits": [
+      { "id": "GenericAnimationTicker" },
       { "id": "EffectZombieLogic" },
       {
         "id": "ToughnessZombieLogic",
@@ -13,8 +15,8 @@
       {
         "id": "MovementZombieLogic",
         "eatDPS": 100,
-        "speed": 0.2,
-        "additionalSpeed": 0.05,
+        "speed": 0.1,
+        "additionalSpeed": 0.02,
         "eatingHitbox": "commonZombieEatingHitbox"
       }
     ]

@@ -1,12 +1,12 @@
 [
   {
     "id": "ground",
-    "asset": null,
+    "animationPack": null,
     "traits": []
   },
   {
     "id": "ice",
-    "asset": "textures/tiles/ice.png",
+    "animationPack": "textures/tiles/ice",
     "traits": [
       {
         "id": "OnTileLogic",

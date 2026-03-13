@@ -4,7 +4,7 @@
     "width": 0.9,
     "height": 0.9,
     "xOffset": 0.0,
-    "yOffset": 0.0,
+    "yOffset": 0.15,
     "center": "CENTER",
     "affectOtherRows": false,
     "debugColor": "#ff0000"
@@ -14,7 +14,7 @@
     "width": 1000.0,
     "height": 0.5,
     "xOffset": -0.1,
-    "yOffset": -0.4,
+    "yOffset": -0.15,
     "center": "CENTER_LEFT",
     "affectOtherRows": false,
     "debugColor": "#ff00ff"
@@ -22,9 +22,9 @@
   {
     "id": "commonZombieHitHitbox",
     "width": 0.7,
-    "height": 1.0,
+    "height": 1.1,
     "xOffset": 0.0,
-    "yOffset": 0.05,
+    "yOffset": 0.0,
     "center": "BOTTOM",
     "affectOtherRows": false,
     "debugColor": "#ff0000"

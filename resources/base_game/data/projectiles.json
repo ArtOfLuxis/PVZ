@@ -1,7 +1,7 @@
 [
   {
     "id": "pea",
-    "asset": "textures/projectiles/pea.png",
+    "animationPack": "textures/projectiles/pea",
     "detectionHitbox": "commonProjectileHitbox",
     "traits": [
       {
@@ -16,7 +16,7 @@
   },
   {
     "id": "fire_pea",
-    "asset": "textures/projectiles/fire_pea.png",
+    "animationPack": "textures/projectiles/fire_pea",
     "detectionHitbox": "commonProjectileHitbox",
     "traits": [
       {
@@ -31,7 +31,7 @@
   },
   {
     "id": "snow_pea",
-    "asset": "textures/projectiles/snow_pea.png",
+    "animationPack": "textures/projectiles/snow_pea",
     "detectionHitbox": "commonProjectileHitbox",
     "traits": [
       {

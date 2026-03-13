@@ -1,0 +1,9 @@
+{
+  "animations": {
+    "idle": {
+      "loop": true,
+      "fps": 30,
+      "extraFrameData": {}
+    }
+  }
+}

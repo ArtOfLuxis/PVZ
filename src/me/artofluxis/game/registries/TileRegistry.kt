@@ -1,7 +1,10 @@
 package me.artofluxis.game.registries
 
+import korlibs.image.bitmap.*
+import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
 import me.artofluxis.game.*
+import me.artofluxis.game.animation.*
 import me.artofluxis.game.game.types.*
 import me.artofluxis.game.trait.*
 import java.io.*
@@ -15,20 +18,24 @@ data object TileRegistry : Registry {
 
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
-            val asset = value.jsonObject["asset"]!!.jsonPrimitive.contentOrNull
-            if (asset != null) BitmapLoader.loadBitmap(asset)
+
+            val animationPack: AnimationPack?
+            val animationPackPath = value.jsonObject["animationPack"]!!.jsonPrimitive.contentOrNull
+            animationPack =
+                if (animationPackPath == null) null
+                else animationPackFromPath(animationPackPath)
 
             val traits = hashSetOf<Trait>()
             value.jsonObject["traits"]!!.jsonArray.forEach { obj ->
                 val traitID = obj.jsonObject["id"]!!.jsonPrimitive.content
                 val trait = Trait.from(traitID, obj.jsonObject)
 
-                if (trait.traitType != TraitType.TILE)
+                if (trait.traitType != TraitType.TILE && trait.traitType != TraitType.GENERIC)
                     error("Non-tile trait in a tile definition $obj")
                 traits.add(trait)
             }
 
-            tiles[id] = TileType(id, asset, traits)
+            tiles[id] = TileType(id, animationPack, traits)
         }
     }
 
