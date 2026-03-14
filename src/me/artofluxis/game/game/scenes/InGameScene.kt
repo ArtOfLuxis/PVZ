@@ -16,30 +16,41 @@ import me.artofluxis.game.game.hitbox.*
 import me.artofluxis.game.game.objects.*
 import me.artofluxis.game.game.objects.logic.*
 import me.artofluxis.game.game.types.*
+import me.artofluxis.game.mod.*
 import me.artofluxis.game.registries.*
-import me.artofluxis.game.trait.events.alive.*
 
 @Suppress("MemberVisibilityCanBePrivate")
 class InGameScene(
     val lawnType: LawnType
 ) : Scene() {
-    private lateinit var sContainer: SContainer
-    val lawnObjects = mutableListOf<LawnObject>()
-    private val pendingObjects = mutableListOf<LawnObject>()
-    private val pendingToDeleteObjects = mutableListOf<LawnObject>()
+    lateinit var sContainer: SContainer
+    val lawnObjects = mutableListOf<LocationalLawnObject>()
+    val pendingObjects = mutableListOf<LocationalLawnObject>()
+    val pendingToDeleteObjects = mutableListOf<LocationalLawnObject>()
 
-    private var paused = false
-    private var pauseOverlay: Container? = null
+    var paused = false
+    var pauseOverlay: Container? = null
+
+    lateinit var lawn: Lawn
 
     override suspend fun SContainer.sceneMain() {
         sContainer = this
 
-        image(BitmapLoader.getBitmap(lawnType.asset)) {
+        val animationPlayer = AnimationPlayer(lawnType.animationPack)
+
+        val lawnImage = image(animationPlayer.frame()) {
             anchor(0.0, 0.0)
             scale(1.0)
             smoothing = false
             zIndex = -99999.0
         }
+
+        lawn = Lawn(
+            this@InGameScene,
+            lawnImage, animationPlayer,
+            hashSetOf(), lawnType
+        )
+        animationPlayer.parent = lawn
 
         keys.down {
             if (it.key == Key.ESCAPE) {
@@ -90,7 +101,6 @@ class InGameScene(
             TeamRegistry.get("zombies")
         )
 
-
         val fpsText = text("FPS: 0") {
             position(4, 4)
             textSize = 20.0
@@ -99,10 +109,10 @@ class InGameScene(
         }
 
         val frameTimes = ArrayDeque<Double>()
-        val averagingWindow = 2.0
+        val averagingWindow = 5.0
 
         var hitboxTimer = 0.0
-        val debugHitboxes = ArrayList<Pair<Hitbox, LawnObject>>(256)
+        val debugHitboxes = ArrayList<Pair<Hitbox, LocationalLawnObject>>(256)
         var debugOverlayBitmap = Bitmap32(
             views.gameWindow.width,
             views.gameWindow.height
@@ -132,19 +142,7 @@ class InGameScene(
             try {
                 val dt = deltaTime.seconds
 
-                if (pendingObjects.isNotEmpty()) {
-                    lawnObjects.addAll(pendingObjects)
-                    pendingObjects.clear()
-                }
-
-                if (pendingToDeleteObjects.isNotEmpty()) {
-                    lawnObjects.removeAll { it in pendingToDeleteObjects }
-                    pendingToDeleteObjects.clear()
-                }
-
-                lawnObjects.forEach { obj ->
-                    if (obj is TickableLawnObject) obj.tick(dt)
-                }
+                GameRegistry.gameLoop.invoke(dt, this@InGameScene)
 
                 if (GlobalRegistry.showDebugHitboxes == true) {
                     hitboxTimer += dt
@@ -200,7 +198,7 @@ class InGameScene(
             } catch (e: Exception) {
                 this@InGameScene.launch {
                     handleException(
-                        e, "Encountered Exception in on-lawn scene"
+                        e, "Encountered Exception in on-lawn scene updater"
                     )
                 }
             }
@@ -208,13 +206,13 @@ class InGameScene(
     }
 
     fun putPlant(obj: LawnPlant) =
-        sContainer.putObject(obj, 0.5, 0.5, obj.type.scale)
+        this.putObject(obj, 0.5, 0.5, obj.type.scale)
     fun putZombie(obj: LawnZombie) =
-        sContainer.putObject(obj, 0.5, 1.0, obj.type.scale)
+        this.putObject(obj, 0.5, 1.0, obj.type.scale)
     fun putProjectile(obj: LawnProjectile) =
-        sContainer.putObject(obj, 0.5, 0.5, 1.0)
+        this.putObject(obj, 0.5, 0.5, 1.0)
     fun putTile(obj: LawnTile) =
-        sContainer.putObject(obj, 0.5, 0.5, 1.0)
+        this.putObject(obj, 0.5, 0.5, 1.0)
 
     fun putPlantByType(
         column: Int,
@@ -263,7 +261,7 @@ class InGameScene(
         return zombie
     }
 
-    fun putProjectileByType(position: Position, row: Int, projectileType: ProjectileType, team: ObjectTeam?, shooter: LawnObject): LawnProjectile {
+    fun putProjectileByType(position: Position, row: Int, projectileType: ProjectileType, team: ObjectTeam?, shooter: LocationalLawnObject): LawnProjectile {
         val animPlayer = AnimationPlayer(projectileType.animationPack)
 
         val projectile = LawnProjectile(
@@ -305,50 +303,16 @@ class InGameScene(
         return tile
     }
 
-    private fun SContainer.putObject(obj: LawnObject, anchorX: Double, anchorY: Double, scale: Double) {
-        val totalScale = obj.scale() * scale
-
-        obj.pos = Position(
-            obj.pos.x + lawnType.tileSize.first  * obj.offset().first  * totalScale,
-            obj.pos.y + lawnType.tileSize.second * obj.offset().second * totalScale
+    private fun putObject(obj: LocationalLawnObject, anchorX: Double, anchorY: Double, scale: Double) {
+        GameRegistry.putObjectHandler.invoke(
+            this@InGameScene,
+            obj, anchorX, anchorY,
+            scale
         )
-        val pos = obj.pos
-
-        pendingObjects.add(obj)
-
-        obj.animationPlayer?.parent = obj
-
-        val frame = obj.animationPlayer?.frame()
-
-
-        if (frame != null) {
-            if (obj is LawnZombie) println(obj.offset())
-            obj.setNewImage(image(frame) {
-                anchor(anchorX, anchorY)
-                scale(totalScale)
-
-                position(pos.x, pos.y)
-                smoothing = false
-                zIndex = 10.0
-            })
-        }
-
-        if (obj is ObjectCreatedTraitListener) obj.onCreation()
     }
 
-    fun removeObject(obj: LawnObject) {
-        require(obj in lawnObjects) {
-            "Tried to delete a lawn object that doesn't exist or is still pending"
-        }
-
-        if (obj is TickableLawnObject) {
-            obj.destroyTraits()
-        }
-
-        obj.image?.removeFromParent()
-        obj.image = null
-
-        pendingToDeleteObjects.add(obj)
+    fun removeObject(obj: LocationalLawnObject) {
+        GameRegistry.removeObjectHandler.invoke(this@InGameScene, obj)
     }
 
     fun SContainer.showPauseMenu() = container {

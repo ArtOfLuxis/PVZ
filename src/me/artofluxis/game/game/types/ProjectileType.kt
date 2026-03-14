@@ -2,7 +2,7 @@ package me.artofluxis.game.game.types
 
 import me.artofluxis.game.animation.*
 import me.artofluxis.game.game.hitbox.*
-import me.artofluxis.game.trait.*
+import me.artofluxis.game.mod.trait.Trait
 
 data class ProjectileType(
     val id: String,

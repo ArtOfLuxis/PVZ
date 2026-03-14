@@ -1,9 +1,7 @@
 [
   {
     "id": "modern",
-    "asset": "textures/lawns/modern.png",
-    "sunDropper": "normal",
-    "sunSprite": "sun",
+    "animationPack": "textures/lawns/modern",
     "rows": 5,
     "columns": 9,
     "tileSize": [82, 97],
@@ -26,6 +24,13 @@
       "aaaaaaaaa",
       "baaaaaaaa",
       "aaaaaaaaa"
+    ],
+    "traits": [
+      {
+        "id": "SundropperLawnLogic",
+        "sunDropper": "normal",
+        "sunSprite": "sun"
+      }
     ]
   }
 ]

@@ -6,8 +6,7 @@ import me.artofluxis.game.game.objects.*
 
 class LawnType(
     val id: String,
-    val asset: String,
-    val sunSprite: AnimationPack,
+    val animationPack: AnimationPack,
     val rows: Int,
     val columns: Int,
     val tileSize: Pair<Int, Int>,

@@ -1,11 +1,10 @@
-package me.artofluxis.game.trait
+package me.artofluxis.game.mod.trait
 
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.*
 import me.artofluxis.game.*
-import me.artofluxis.game.game.objects.LawnObject
+import me.artofluxis.game.game.objects.LocationalLawnObject
 import me.artofluxis.game.mod.*
-import java.lang.ref.*
 
 open class Trait(
     private val fields: Map<String, LazyDeserializer<*>>,
@@ -28,7 +27,7 @@ open class Trait(
         return value as T
     }
 
-    open fun createInstance(parent: LawnObject): TraitInstance {
+    open fun createInstance(parent: LocationalLawnObject): TraitInstance {
         error("Trait does not implement instance creation")
     }
 

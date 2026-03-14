@@ -2,13 +2,11 @@ package me.artofluxis.game.game.objects
 
 import kotlinx.coroutines.*
 import me.artofluxis.game.*
-import me.artofluxis.game.trait.*
-import me.artofluxis.game.trait.events.general.*
+import me.artofluxis.game.mod.trait.*
 
 abstract class TickableLawnObject : LawnObject {
-    protected open val traits = hashSetOf<TraitInstance>()
-    private val tickTraitListeners = hashSetOf<TickTraitListener>()
-    private var shouldTick = true
+    protected open val traits: MutableSet<TraitInstance> = hashSetOf()
+    var shouldTick = true
 
     fun destroyTraits() {
         shouldTick = false
@@ -18,21 +16,7 @@ abstract class TickableLawnObject : LawnObject {
             t.destroy()
         }
 
-        tickTraitListeners.clear()
         traits.clear()
-    }
-
-    fun tick(deltaTime: Double) {
-        val snapshot = tickTraitListeners.toList()
-        for (listener in snapshot) {
-            try {
-                if (!shouldTick) return
-
-                listener.tick(deltaTime)
-            } catch (e: Throwable) {
-                scene.launch { handleException(e, "Error during trait tick") }
-            }
-        }
     }
 
     fun addTrait(trait: TraitInstance) {
@@ -53,16 +37,10 @@ abstract class TickableLawnObject : LawnObject {
         */
 
         traits.add(trait)
-
-        if (trait is TickTraitListener)
-            tickTraitListeners.add(trait)
     }
 
-    fun removeTrait(trait: TraitInstance) {
+    fun removeTrait(trait: ObjectTraitInstance) {
         traits.remove(trait)
-
-        if (trait is TickTraitListener)
-            tickTraitListeners.remove(trait)
     }
 
     fun getTraitsSnapshot() = traits.toList()

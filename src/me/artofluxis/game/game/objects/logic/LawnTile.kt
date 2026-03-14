@@ -3,11 +3,10 @@ package me.artofluxis.game.game.objects.logic
 import korlibs.korge.view.*
 import me.artofluxis.game.*
 import me.artofluxis.game.animation.*
-import me.artofluxis.game.game.hitbox.*
 import me.artofluxis.game.game.objects.*
 import me.artofluxis.game.game.scenes.*
 import me.artofluxis.game.game.types.*
-import me.artofluxis.game.trait.*
+import me.artofluxis.game.mod.trait.*
 
 @Suppress("MemberVisibilityCanBePrivate")
 class LawnTile(
@@ -18,7 +17,7 @@ class LawnTile(
     override val animationPlayer: AnimationPlayer?,
     override val traits: HashSet<TraitInstance>,
     val type: TileType,
-): TickableLawnObject() {
+): TickableLawnObject(), LocationalLawnObject {
     override var team: ObjectTeam? = null
     override val highlightFilter = HighlightFilter(mutableListOf())
 

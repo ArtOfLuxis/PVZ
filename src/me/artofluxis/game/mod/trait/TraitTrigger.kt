@@ -1,4 +1,4 @@
-package me.artofluxis.game.trait
+package me.artofluxis.game.mod.trait
 
 import kotlin.reflect.*
 

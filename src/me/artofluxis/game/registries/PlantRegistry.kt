@@ -1,13 +1,14 @@
 package me.artofluxis.game.registries
 
-import korlibs.image.bitmap.*
-import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
 import me.artofluxis.game.*
-import me.artofluxis.game.animation.*
 import me.artofluxis.game.game.types.*
-import me.artofluxis.game.trait.*
+import me.artofluxis.game.mod.trait.*
 import java.io.*
+import kotlin.collections.HashMap
+import kotlin.collections.forEach
+import kotlin.collections.hashSetOf
+import kotlin.collections.set
 
 data object PlantRegistry : Registry {
     val plants = HashMap<String, PlantType>()

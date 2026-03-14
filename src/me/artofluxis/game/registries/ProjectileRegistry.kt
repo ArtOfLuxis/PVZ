@@ -1,12 +1,10 @@
 package me.artofluxis.game.registries
 
-import korlibs.image.bitmap.*
-import korlibs.io.file.std.*
 import kotlinx.serialization.json.*
 import me.artofluxis.game.*
-import me.artofluxis.game.animation.*
 import me.artofluxis.game.game.types.*
-import me.artofluxis.game.trait.*
+import me.artofluxis.game.mod.trait.Trait
+import me.artofluxis.game.mod.trait.TraitType
 import java.io.*
 
 data object ProjectileRegistry : Registry {

@@ -8,13 +8,11 @@ import korlibs.korge.scene.*
 import korlibs.math.geom.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.*
-import me.artofluxis.game.game.save.SaveData
-import me.artofluxis.game.game.scenes.InGameScene
-import me.artofluxis.game.game.scenes.LoadingScene
-import me.artofluxis.game.game.scenes.MainMenuScene
+import me.artofluxis.game.game.save.*
+import me.artofluxis.game.game.scenes.*
 import me.artofluxis.game.mod.*
+import me.artofluxis.game.mod.trait.*
 import me.artofluxis.game.registries.*
-import me.artofluxis.game.trait.*
 import java.io.*
 
 lateinit var runDir: File

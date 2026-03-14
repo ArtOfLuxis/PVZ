@@ -14,9 +14,10 @@ data object LawnRegistry : Registry {
 
         for (value in json) {
             val id = value.jsonObject["id"]!!.jsonPrimitive.content
-            val asset = value.jsonObject["asset"]!!.jsonPrimitive.content
-            BitmapLoader.loadBitmap(asset)
-            val sunSprite = SpriteRegistry.get(value.jsonObject["sunSprite"]!!.jsonPrimitive.content)
+
+            val animationPackPath = value.jsonObject["animationPack"]!!.jsonPrimitive.content
+            val animationPack = animationPackFromPath(animationPackPath)
+
             val rows = value.jsonObject["rows"]!!.jsonPrimitive.int
             val columns = value.jsonObject["columns"]!!.jsonPrimitive.int
             val tileSize = value.jsonObject["tileSize"]!!.jsonArray.let {
@@ -43,7 +44,7 @@ data object LawnRegistry : Registry {
                 }}
 
             lawns[id] = LawnType(
-                id, asset, sunSprite, rows, columns,
+                id, animationPack, rows, columns,
                 tileSize, lawnUpperLeftCorner,
                 teamSizes, teamOffsets, tileSet
             )

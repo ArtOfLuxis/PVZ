@@ -1,7 +1,7 @@
 package me.artofluxis.game.game.types
 
 import me.artofluxis.game.animation.*
-import me.artofluxis.game.trait.*
+import me.artofluxis.game.mod.trait.Trait
 
 data class TileType(
     val id: String,

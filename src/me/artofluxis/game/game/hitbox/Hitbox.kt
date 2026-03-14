@@ -5,7 +5,6 @@ import me.artofluxis.game.Position
 import me.artofluxis.game.game.types.LawnType
 import korlibs.math.geom.Rectangle
 import me.artofluxis.game.game.objects.*
-import me.artofluxis.game.game.scenes.*
 
 class Hitbox(
     val id: String,
@@ -67,11 +66,11 @@ class Hitbox(
     override fun toString(): String = "Hitbox[$id]"
 
     fun isIntersecting(
-        obj: LawnObject,
-        otherObj: LawnObject,
+        obj: LocationalLawnObject,
+        otherObj: LocationalLawnObject,
         otherHitbox: Hitbox,
         lawnType: LawnType,
-        condition: (LawnObject, Hitbox) -> Boolean,
+        condition: (LocationalLawnObject, Hitbox) -> Boolean,
     ): Boolean {
         return otherObj != obj &&
             condition(otherObj, otherHitbox) &&
@@ -91,10 +90,10 @@ class Hitbox(
     }
 
     fun isIntersecting(
-        obj: LawnObject,
-        otherObj: LawnObject,
+        obj: LocationalLawnObject,
+        otherObj: LocationalLawnObject,
         lawnType: LawnType,
-        condition: (LawnObject, Hitbox) -> Boolean,
+        condition: (LocationalLawnObject, Hitbox) -> Boolean,
     ): Boolean {
         return isIntersecting(
             obj, otherObj,
@@ -103,12 +102,12 @@ class Hitbox(
         )
     }
 
-    fun findIntersectingObjects(obj: LawnObject) = findIntersectingObjects(obj) { _, _ -> true }
+    fun findIntersectingObjects(obj: LocationalLawnObject) = findIntersectingObjects(obj) { _, _ -> true }
 
     fun findIntersectingObjects(
-        obj: LawnObject,
-        filter: (LawnObject, Hitbox) -> Boolean,
-    ): List<LawnObject> {
+        obj: LocationalLawnObject,
+        filter: (LocationalLawnObject, Hitbox) -> Boolean,
+    ): List<LocationalLawnObject> {
         val scene = obj.scene
         return scene.lawnObjects.filter { other ->
             isIntersecting(obj, other, scene.lawnType, filter)
@@ -116,8 +115,8 @@ class Hitbox(
     }
 
     fun anyIntersectingObject(
-        obj: LawnObject,
-        condition: (LawnObject, Hitbox) -> Boolean,
+        obj: LocationalLawnObject,
+        condition: (LocationalLawnObject, Hitbox) -> Boolean,
     ): Boolean {
         val scene = obj.scene
         return scene.lawnObjects.any { other ->

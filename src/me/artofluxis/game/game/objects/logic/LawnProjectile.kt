@@ -1,16 +1,12 @@
 package me.artofluxis.game.game.objects.logic
 
-import me.artofluxis.game.Position
-import me.artofluxis.game.game.objects.LawnObject
-import me.artofluxis.game.game.objects.ObjectTeam
-import me.artofluxis.game.game.objects.TickableLawnObject
 import korlibs.korge.view.*
+import me.artofluxis.game.*
 import me.artofluxis.game.animation.*
-import me.artofluxis.game.game.hitbox.*
+import me.artofluxis.game.game.objects.*
 import me.artofluxis.game.game.scenes.*
 import me.artofluxis.game.game.types.*
-import me.artofluxis.game.trait.*
-import me.artofluxis.game.trait.events.alive.*
+import me.artofluxis.game.mod.trait.*
 
 @Suppress("MemberVisibilityCanBePrivate", "CanBeParameter")
 class LawnProjectile(
@@ -22,17 +18,11 @@ class LawnProjectile(
     override val animationPlayer: AnimationPlayer,
     override val traits: HashSet<TraitInstance>,
     val type: ProjectileType,
-    val parentShooter: LawnObject
-): TickableLawnObject() {
+    val parentShooter: LocationalLawnObject
+): TickableLawnObject(), LocationalLawnObject {
     override val highlightFilter = parentShooter.highlightFilter
 
     override fun hitHitbox() = type.hitHitbox
-
-    fun projectileHitObject(obj: LawnObject, damage: Double) {
-        traits.forEach {
-            if (it is ProjectileHitObjectTraitListener) it.projectileHitObject(obj, damage)
-        }
-    }
 
     override fun toString(): String = "${this::class.simpleName}[${type.id}]"
 
